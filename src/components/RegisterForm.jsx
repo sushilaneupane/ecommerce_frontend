@@ -44,11 +44,11 @@ function RegisterForm() {
             { ...values, role: "USER" },
             {
                 onSuccess: () => {
-                    console.log("✅ User created successfully!");
+                    console.log(" User created successfully!");
                     setTimeout(() => navigate("/login"), 500);
                 },
                 onError: (error) => {
-                    console.error("❌ Failed to create account:", error?.message || error);
+                    console.error("Failed to create account:", error?.message || error);
                 },
             }
         );
@@ -63,7 +63,7 @@ function RegisterForm() {
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        {/* First Name */}
+                        
                         <FormField
                             control={form.control}
                             name="firstName"

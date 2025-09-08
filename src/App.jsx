@@ -12,6 +12,9 @@ import RegisterForm from "./components/RegisterForm";
 import AboutPage from "./components/AboutPage";
 import InfoCard from "./components/InfoCard";
 import ProfileCard from "./components/ProfileCard"; 
+import WishlistContext from "./components/WishlistContext";
+import CartPage from "./components/CartContext";
+
 
 function App() {
   return (
@@ -30,6 +33,8 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/infocard" element={<InfoCard />} />
           <Route path="/profilecard" element={<ProfileCard />} />
+          <Route path="wishlist" element={<WishlistContext />} /> 
+          <Route path="cart" element={<CartPage />} />
         </Routes>
       </main>
 

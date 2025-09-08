@@ -1,39 +1,53 @@
 import React from "react"
-import { Button } from "@/components/ui/button"
-import homeImage3 from "@/assets/homeImage3.jpg"
 import { Link } from "react-router-dom"
-import NewArrival from "./NewArrival";
-import Featured from "./Featured";
-
+import homeImage5 from "@/assets/homeImage5.jpg"
+import NewArrival from "./NewArrival"
+import Featured from "./Featured"
 
 
 
 export default function Hero() {
     return (
         <>
-        <section className="relative h-screen w-full mt-9">
-            <img
-                src={homeImage3}
-                alt="Hero"
-                className="absolute inset-0 h-full w-full object-cover"
-            />
+            <section className="relative w-full mt-9 bg-gradient-to-br from-purple-900 via-purple-700 to-indigo-900 overflow-hidden min-h-[70vh] md:min-h-screen">
 
-            <div className="absolute inset-0 bg-black/50" />
 
-            <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white px-4">
-                <h1 className="text-5xl font-bold mb-4">Welcome to Our Website</h1>
-                <p className="text-lg mb-6 max-w-xl">
-                    Well come to our e-commerce platform where you can find the best products at unbeatable prices. Start your shopping journey with us today!
-                </p>
-                <Link to="/products" className="hover:bg-blue-700">
-                    Explore.....
-                </Link>
+                <div className="container mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-16">
 
-            </div>
-        </section>
-        <NewArrival />
-        <Featured />
+                   
+                    <div className="text-white md:w-1/2 text-center md:text-left space-y-6 md:ml-40">
+
+
+                        <h1 className="text-2xl md:text-4xl font-bold">
+                            SPECIAL <span className="block text-pink-400">MEGA OFFERS</span>
+                        </h1>
+                        <p className="text-lg md:text-2xl max-w-md">
+                            Welcome to our e-commerce platform where you can find the best products at unbeatable prices. Start your shopping journey with us today!
+                        </p>
+                        <Link
+                            to="/products"
+                            className="inline-block px-6 py-3 bg-pink-500 hover:bg-pink-600 rounded-full font-semibold transition"
+                        >
+                            Explore Now
+                        </Link>
+                    </div>
+
+
+                    <div className="relative mt-10 md:mt-7 md:w-1/2 flex justify-center">
+                        <div className="rounded-full bg-yellow-400 p-4 w-64 h-64 md:w-[32rem] md:h-[32rem] flex items-center justify-center">
+                            <img
+                                src={homeImage5}
+                                alt="Shopping Group"
+                                className="rounded-full object-cover w-5/6 h-5/6 md:w-[30rem] md:h-[30rem]"
+                            />
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+            <NewArrival />
+            <Featured />
+
         </>
-
     )
 }

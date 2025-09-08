@@ -34,50 +34,54 @@ function AllProducts() {
       <h1 className="text-4xl font-bold text-center mb-6">All Products</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {/* Left: Category panel */}
-        {showCategories && (
-          <div className="md:col-span-1 bg-gray-50 p-4 rounded-lg shadow flex flex-col">
-           
+        
+        <div className="col-span-1 bg-gray-50 p-4 rounded-lg shadow flex flex-col">
+       
+          <div className="flex justify-start mb-4">
+            <Button
+              onClick={() => setShowCategories(!showCategories)}
+              className="flex items-center gap-2 bg-white hover:bg-gray-100 shadow-sm"
+            >
+              {showCategories ? (
+                <EyeOff className="h-4 w-4 text-black" />
+              ) : (
+                <Eye className="h-4 w-4 text-black" />
+              )}
+            </Button>
+          </div>
 
-              
+         
+          {showCategories && (
+            <>
+            
               <div className="flex gap-2 mb-7">
                 <Input type="text" placeholder="Search..." className="flex-1" />
                 <Button className="flex items-center gap-2">
                   <Search className="h-4 w-4" /> Search
                 </Button>
               </div>
-           
 
-            {/* Categories List */}
-         <div className="mb-4 flex justify-between items-center">
-  <h2 className="text-xl font-semibold">Categories</h2>
-  <Button
-    onClick={() => setShowCategories(!showCategories)}
-    className="flex items-center gap-2 bg-white hover:bg-white-200"
-  >
-<EyeOff className="h-4 w-4 text-black" />
+              
+              <h2 className="text-xl font-semibold mb-2">Categories</h2>
+              {isCategoriesLoading && <p>Loading categories...</p>}
+              {isCategoriesError && (
+                <p className="text-red-500">Error: {categoriesError.message}</p>
+              )}
+              <ul className="space-y-2">
+                {categories?.map((category, index) => (
+                  <li
+                    key={index}
+                    className="cursor-pointer hover:text-blue-600 capitalize"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
 
-  </Button>
-</div>
-
-            {isCategoriesLoading && <p>Loading categories...</p>}
-            {isCategoriesError && (
-              <p className="text-red-500">Error: {categoriesError.message}</p>
-            )}
-            <ul className="space-y-2">
-              {categories?.map((category, index) => (
-                <li
-                  key={index}
-                  className="cursor-pointer hover:text-blue-600 capitalize"
-                >
-                  {category}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Right: Products grid */}
+      
         <div className={showCategories ? "md:col-span-3" : "md:col-span-4"}>
           {isProductsLoading && <p>Loading products...</p>}
           {isProductsError && (

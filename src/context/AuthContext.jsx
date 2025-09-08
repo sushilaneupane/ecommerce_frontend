@@ -1,12 +1,10 @@
-import React from "react";  
-import { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) setIsAuthenticated(true);
@@ -14,12 +12,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = (token) => {
     localStorage.setItem("authToken", token);
-    setIsAuthenticated(true);
+    setIsAuthenticated(true);   
   };
 
   const logout = () => {
     localStorage.removeItem("authToken");
-    setIsAuthenticated(false);
+    setIsAuthenticated(false);  
   };
 
   return (
