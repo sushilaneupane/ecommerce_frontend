@@ -1,40 +1,72 @@
-// ProductCard.js
-import React from "react";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useProductById } from "../hooks/useProducts";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
-const Product = ({ product }) => {
+const ProductOverview = () => {
+  const { id } = useParams(); // ✅ always runs
+  const { data: product, isLoading, isError } = useProductById(id); // ✅ always runs, but query is disabled when id is falsy
+
+  if (!id) return <p>No product found</p>; // ✅ safe conditional (after hook calls)
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Failed to load product</p>;
+
   return (
-    <Link to={`/product/${product.id}`} style={{ textDecoration: "none" }}>
-      <Card className="h-full hover:shadow-lg transition-shadow duration-300">
-        <img
-          src={product.imageUrl || "/image/cardimage.jpg"}
-          alt={product.productName || "Product Image"}
-          className="w-full h-48 object-cover rounded-t-md"
-        />
-        <CardContent className="text-center">
-          <p className="font-medium text-lg">{product.productName || "Unknown Product"}</p>
-          <p className="text-sm text-gray-600">RS {product.price}</p>
-        </CardContent>
-        <CardFooter className="flex justify-center">
-          <Button variant="default" size="sm">
-            View Product
+
+    <div className="flex justify-center p-4 mt-20">
+      <div className="flex flex-col md:flex-row h-[70vh] gap-8 max-w-5xl w-full">
+        {/* Left Column */}
+        <Card className="md:w-1/2 bg-gray-100 flex justify-center items-center p-4">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full max-w-lg rounded-lg shadow-lg"
+          />
+        </Card>
+
+        {/* Right Column */}
+        <Card className="md:w-1/2 bg-gray-50 p-6 flex flex-col justify-start">
+          {/* Card Header: Title */}
+          <CardHeader className="p-0">
+            <CardTitle className="text-2xl font-bold">{product.productName}</CardTitle>
+          </CardHeader>
+
+          {/* Description */}
+          <CardDescription className="text-gray-700">
+            {product.description}
+          </CardDescription>
+          <p className="text-m font-bold"> Price:{product.price}</p>
+
+          {/* Size Options */}
+          <div className="mt-2">
+            <span className="font-semibold mr-4">Size:</span>
+            <div className="flex space-x-2">
+              {["XS", "S", "M", "L", "XL"].map((size) => (
+                <button
+                  key={size}
+                  className="border border-gray-300 rounded px-3 py-1 hover:bg-gray-200 transition"
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Add to Cart Button */}
+          <Button className=" text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition w-30">
+            Add to Cart
           </Button>
-        </CardFooter>
-      </Card>
-    </Link>
+        </Card>
+
+      </div>
+    </div>
+
+
   );
 };
 
-Product.propTypes = {
-  product: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    productName: PropTypes.string,
-    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    imageUrl: PropTypes.string,
-  }).isRequired,
-};
 
-export default Product;
+
+export default ProductOverview;
