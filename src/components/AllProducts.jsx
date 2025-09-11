@@ -1,42 +1,92 @@
-import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Heart, Search, Eye, EyeOff } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { Eye, EyeOff, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useCategories } from "../hooks/useCategories";
 import { useProducts } from "../hooks/useProducts";
+import ProductCard from "@/components/ProductCard";
 
 function AllProducts() {
   const [showCategories, setShowCategories] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [sortOption, setSortOption] = useState("LowToHigh");
 
+  // Fetch categories
   const {
-    data: categories,
+    data: categories = [],
     isLoading: isCategoriesLoading,
     isError: isCategoriesError,
     error: categoriesError,
   } = useCategories();
 
+  // Fetch products
   const {
-    data: products,
+    data: productsResponse,
     isLoading: isProductsLoading,
     isError: isProductsError,
     error: productsError,
   } = useProducts();
 
+  // Extract actual products array safely
+  const products = productsResponse?.data || [];
+
+  // Filter & sort products
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
+
+    // Filter by category
+    if (selectedCategory !== "All") {
+      result = result.filter(
+        (p) => p.categoryName?.toLowerCase() === selectedCategory.toLowerCase()
+      );
+    }
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      result = result.filter((p) =>
+        p.productName.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Sorting
+    switch (sortOption) {
+      case "LowToHigh":
+        result.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+        break;
+      case "HighToLow":
+        result.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+        break;
+      case "AZ":
+        result.sort((a, b) => a.productName.localeCompare(b.productName));
+        break;
+      case "ZA":
+        result.sort((a, b) => b.productName.localeCompare(a.productName));
+        break;
+      case "Newest":
+        result.sort((a, b) => b.id - a.id);
+        break;
+      default:
+        break;
+    }
+
+    return result;
+  }, [products, selectedCategory, searchQuery, sortOption]);
+
   return (
     <div className="container mx-auto px-4 py-8 mt-9">
-      <h1 className="text-4xl font-bold text-center mb-6">All Products</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        
-        <div className="col-span-1 bg-gray-50 p-4 rounded-lg shadow flex flex-col">
-       
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {/* Sidebar */}
+        <aside className="col-span-1 bg-gray-50 p-4 rounded-lg shadow flex flex-col">
+          {/* Toggle Categories */}
           <div className="flex justify-start mb-4">
             <Button
               onClick={() => setShowCategories(!showCategories)}
@@ -50,73 +100,95 @@ function AllProducts() {
             </Button>
           </div>
 
-         
           {showCategories && (
             <>
-            
-              <div className="flex gap-2 mb-7">
-                <Input type="text" placeholder="Search..." className="flex-1" />
+              {/* Search Box */}
+              <div className="flex gap-2 mb-6">
+                <Input
+                  type="text"
+                  placeholder="Search..."
+                  className="flex-1"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
                 <Button className="flex items-center gap-2">
                   <Search className="h-4 w-4" /> Search
                 </Button>
               </div>
 
-              
-              <h2 className="text-xl font-semibold mb-2">Categories</h2>
+              {/* Categories */}
+              <h2 className="text-xl font-semibold mb-3">Categories</h2>
               {isCategoriesLoading && <p>Loading categories...</p>}
               {isCategoriesError && (
                 <p className="text-red-500">Error: {categoriesError.message}</p>
               )}
               <ul className="space-y-2">
-                {categories?.map((category, index) => (
+                <li
+                  className={`cursor-pointer capitalize ${
+                    selectedCategory === ""? "text-blue-600 font-semibold" : ""
+                  }`}
+                  onClick={() => setSelectedCategory("All")}
+                >
+                  All
+                </li>
+                {categories?.map((cat, index) => (
                   <li
                     key={index}
-                    className="cursor-pointer hover:text-blue-600 capitalize"
+                    className={`cursor-pointer capitalize hover:text-blue-600 ${
+                      selectedCategory === cat.name
+                        ? "text-blue-600 font-semibold"
+                        : ""
+                    }`}
+                    onClick={() => setSelectedCategory(cat.name)}
                   >
-                    {category}
+                    {cat.name}
                   </li>
                 ))}
               </ul>
             </>
           )}
-        </div>
+        </aside>
 
-      
-        <div className={showCategories ? "md:col-span-3" : "md:col-span-4"}>
+        {/* Products Grid */}
+        <main className={showCategories ? "md:col-span-3" : "md:col-span-4"}>
+          {/* Header: Title + Count + Sort */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+            <h3 className="text-2xl font-semibold">
+              {selectedCategory === "All" ? "All Products" : selectedCategory}
+            </h3>
+            <span className="text-sm text-gray-500">
+              {filteredProducts.length} products
+            </span>
+            <Select value={sortOption} onValueChange={setSortOption}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="LowToHigh">Price Low to High</SelectItem>
+                <SelectItem value="HighToLow">Price High to Low</SelectItem>
+                <SelectItem value="AZ">Name A-Z</SelectItem>
+                <SelectItem value="ZA">Name Z-A</SelectItem>
+                <SelectItem value="Newest">Newest</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Product Cards */}
           {isProductsLoading && <p>Loading products...</p>}
           {isProductsError && (
             <p className="text-red-500">Error: {productsError.message}</p>
           )}
 
-          <div className="grid [grid-template-columns:repeat(auto-fit,minmax(16rem,1fr))] gap-3">
-            {products?.map((product) => (
-              <Card
-                key={product.id}
-                className="w-full sm:w-64 hover:shadow-lg transition-shadow duration-300"
-              >
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="w-full h-36 object-contain rounded-t-md bg-white"
-                />
-                <CardContent className="p-3">
-                  <CardHeader className="p-0 mb-2">
-                    <CardTitle className="text-base line-clamp-1">
-                      {product.title}
-                    </CardTitle>
-                    <CardDescription className="text-sm line-clamp-2">
-                      {product.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <div className="mt-2 flex items-center justify-between">
-                    <span className="font-bold text-sm">${product.price}</span>
-                    <Heart className="h-6 w-6 text-gray-700 hover:text-red-600 cursor-pointer" />
-                  </div>
-                </CardContent>
-              </Card>
+          <div className="grid [grid-template-columns:repeat(auto-fit,minmax(16rem,1fr))] gap-4">
+            {filteredProducts?.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
+
+            {filteredProducts?.length === 0 && !isProductsLoading && (
+              <p className="text-center col-span-full">No products found.</p>
+            )}
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

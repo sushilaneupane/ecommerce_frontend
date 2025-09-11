@@ -27,7 +27,7 @@ function NewArrival() {
   }
 
   // ✅ Show only latest 6 products
-  const latestProducts = products?.slice(-8).reverse();
+  const latestProducts = products?.data.slice(-8).reverse();
 
   return (
     <section className="container mx-auto px-4 py-10">
@@ -53,13 +53,13 @@ function NewArrival() {
               className="w-full hover:shadow-lg transition-shadow duration-300"
             >
               <img
-                src={product.image}
-                alt={product.title}
+                src={product.images[0].image}
+                alt={product.productName}
                 className="w-full h-40 object-contain rounded-t-md bg-white"
               />
               <CardContent className="p-3">
                 <CardHeader className="p-0 mb-2">
-                  <CardTitle className="text-base">{product.title}</CardTitle>
+                  <CardTitle className="text-base">{product.productName}</CardTitle>
                   <CardDescription className="text-sm line-clamp-2">
                     {product.description}
                   </CardDescription>

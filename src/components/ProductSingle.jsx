@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const ProductCard = ({ product }) => {
+const Product = ({ product }) => {
   return (
     <Link to={`/product/${product.id}`} style={{ textDecoration: "none" }}>
       <Card className="h-full hover:shadow-lg transition-shadow duration-300">
@@ -28,7 +28,7 @@ const ProductCard = ({ product }) => {
   );
 };
 
-ProductCard.propTypes = {
+Product.propTypes = {
   product: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     productName: PropTypes.string,
@@ -37,4 +37,4 @@ ProductCard.propTypes = {
   }).isRequired,
 };
 
-export default ProductCard;
+export default Product;

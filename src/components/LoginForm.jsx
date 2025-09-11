@@ -45,6 +45,7 @@ export default function LoginForm() {
      
         if (response?.data?.token) {
           localStorage.setItem("authToken", response.data.token);
+          localStorage.setItem("user", JSON.stringify(response.data.user));
         }
        
         navigate("/");

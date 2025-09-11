@@ -1,5 +1,5 @@
 export const fetchCategories = async () => {
-  const response = await fetch("https://fakestoreapi.com/products/categories");
+  const response = await fetch("http://localhost:3001/api/categories");
   if (!response.ok) {
     throw new Error("Failed to fetch categories");
   }

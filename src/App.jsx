@@ -13,8 +13,8 @@ import AboutPage from "./components/AboutPage";
 import InfoCard from "./components/InfoCard";
 import ProfileCard from "./components/ProfileCard"; 
 import WishlistContext from "./components/WishlistContext";
-import CartPage from "./components/CartContext";
-
+import ShoppingCart from "./components/CartContext";
+import Product from "./components/ProductSingle";
 
 function App() {
   return (
@@ -22,20 +22,22 @@ function App() {
       <NavBar />
 
       <main className="min-h-screen">
-        <Routes>
-          <Route path="/" element={<Hero />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/products" element={<AllProducts />} />
-          <Route path="/newarrival" element={<NewArrival />} />
-          <Route path="/featured" element={<Featured />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/infocard" element={<InfoCard />} />
-          <Route path="/profilecard" element={<ProfileCard />} />
-          <Route path="wishlist" element={<WishlistContext />} /> 
-          <Route path="cart" element={<CartPage />} />
-        </Routes>
+     <Routes>
+  <Route path="/" element={<Hero />} />
+  <Route path="/login" element={<LoginForm />} />
+  <Route path="/products" element={<AllProducts />} />
+  <Route path="/newarrival" element={<NewArrival />} />
+  <Route path="/featured" element={<Featured />} />
+  <Route path="/contact" element={<Contact />} />
+  <Route path="/register" element={<RegisterForm />} />
+  <Route path="/about" element={<AboutPage />} />
+  <Route path="/infocard" element={<InfoCard />} />
+  <Route path="/profilecard" element={<ProfileCard />} />
+  <Route path="/wishlist" element={<WishlistContext />} />
+  <Route path="/cart" element={<ShoppingCart />} />
+  <Route path="/product/:id" element={<Product />} />
+</Routes>
+
       </main>
 
       <Footer />
