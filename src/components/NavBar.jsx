@@ -106,13 +106,6 @@ function Navbar() {
       {/* Mobile Dropdown */}
       {isOpen && (
         <div className="md:hidden mt-3 space-y-4 px-4 pb-4 border-t pt-4">
-          <div className="flex items-center space-x-2">
-            <Input type="text" placeholder="Search..." className="w-full" />
-            <Button type="submit">
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
-
           <div className="flex flex-col space-y-3">
             <Link to="/products" className="text-gray-700">Products</Link>
             <Link to="/about" className="text-gray-700">About</Link>

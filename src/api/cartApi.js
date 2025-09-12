@@ -2,9 +2,21 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3001/api/carts";
 
+export const createCart = async (cartData, token) => {
+  const response = await api.post("/cart",cartData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Add token here
+      },
+    }
+  );
+  return response.data;
+};
+
 /** Get carts by userId */
 export const getCartsByUserId = async (userId, token) => {
-  const { data } = await axios.get(`${API_URL}/user/${userId}`, {
+  const { data } = await axios.get(`${API_URL}/user/${userId}`,
+     {
     headers: { Authorization: `Bearer ${token}` },
   });
   return data;
@@ -12,7 +24,8 @@ export const getCartsByUserId = async (userId, token) => {
 
 /** Update cart item */
 export const updateCart = async (cartItemId, updatedItem, token) => {
-  const { data } = await axios.put(`${API_URL}/${cartItemId}`, updatedItem, {
+  const { data } = await axios.put(`${API_URL}/${cartItemId}`, updatedItem,
+     {
     headers: { Authorization: `Bearer ${token}` },
   });
   return data;
@@ -20,7 +33,8 @@ export const updateCart = async (cartItemId, updatedItem, token) => {
 
 /** Delete cart item */
 export const deleteCart = async (cartId, token) => {
-  const { data } = await axios.delete(`${API_URL}/${cartId}`, {
+  const { data } = await axios.delete(`${API_URL}/${cartId}`,
+     {
     headers: { Authorization: `Bearer ${token}` },
   });
   return data;

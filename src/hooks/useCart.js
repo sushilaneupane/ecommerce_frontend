@@ -11,6 +11,17 @@ export function useCart(loggedInUser, token) {
     enabled: !!loggedInUser?.id && !!token,
   });
 
+ const create = useMutation({
+    mutationFn: (cartData) => {
+      const payload = { ...cartData, userId: user?.id };
+      return createwishlist(payload, token);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([cart_KEY]);
+    },
+  });
+
+
   /** Update mutation */
   const updateMutation = useMutation({
     mutationFn: ({ cartItemId, productId, newQuantity }) =>

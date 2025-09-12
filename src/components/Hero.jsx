@@ -34,7 +34,7 @@ export default function Hero() {
 
 
                     <div className="relative mt-10 md:mt-7 md:w-1/2 flex justify-center">
-                        <div className="rounded-full bg-yellow-400 p-4 w-64 h-64 md:w-[32rem] md:h-[32rem] flex items-center justify-center">
+                        <div className="rounded-full bg-pink-200 p-4 w-64 h-64 md:w-[32rem] md:h-[32rem] flex items-center justify-center">
                             <img
                                 src={homeImage}
                                 alt="Shopping Group"
