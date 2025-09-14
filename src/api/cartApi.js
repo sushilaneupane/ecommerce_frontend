@@ -1,41 +1,28 @@
+// src/api/cartApi.js
 import axios from "axios";
 
-const API_URL = "http://localhost:3001/api/carts";
-
+const api = axios.create({
+  baseURL: "http://localhost:3001/api",
+});
 export const createCart = async (cartData, token) => {
-  const response = await api.post("/cart",cartData,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`, // Add token here
-      },
-    }
-  );
+  console.log(cartData, token);
+  const response = await api.post(`/carts`, cartData, {
+
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 
-/** Get carts by userId */
 export const getCartsByUserId = async (userId, token) => {
-  const { data } = await axios.get(`${API_URL}/user/${userId}`,
-     {
-    headers: { Authorization: `Bearer ${token}` },
+  const response = await api.get(`/carts/user/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
-  return data;
+  return response.data;
 };
 
-/** Update cart item */
-export const updateCart = async (cartItemId, updatedItem, token) => {
-  const { data } = await axios.put(`${API_URL}/${cartItemId}`, updatedItem,
-     {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return data;
-};
 
-/** Delete cart item */
-export const deleteCart = async (cartId, token) => {
-  const { data } = await axios.delete(`${API_URL}/${cartId}`,
-     {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return data;
-};
+

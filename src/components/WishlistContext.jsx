@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+
+
 import { Button } from "@/components/ui/button";
 import { Heart, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -10,10 +12,10 @@ const Wishlist = () => {
   const [loadingId, setLoadingId] = useState(null);
 
   const safeWishlist = Array.isArray(wishlist) ? wishlist : [];
-  console.log("Wishlist data from API:", safeWishlist);
+ 
 
   const handleRemove = (wishlistId) => {
-    setLoadingId(wishlistId); 
+    setLoadingId(wishlistId);
     remove.mutate(wishlistId, {
       onSettled: () => setLoadingId(null),
     });
@@ -37,20 +39,27 @@ const Wishlist = () => {
           No items in your favourites.
         </p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {safeWishlist.map((item) => (
             <Card key={item.wishlistId} className="relative shadow-md hover:shadow-lg transition">
               <Link to={`/product/${item.productId}`} className="block">
                 <img
-                  src={item.images[0] || "/placeholder.png"}
-                  alt={item.productName}
-                  className="w-full h-48 object-cover rounded-t-lg"
+                  src={
+                    item.images?.[0]
+                      ? `http://localhost:3001/uploads/${item.images[0]}`
+                      : "/image/cardimage.jpg"
+                  }
+                  alt={item?.productName || "Product"}
+                  className="w-full h-36 sm:h-40 md:h-48 object-cover rounded-t-xl bg-red-200"
                 />
                 <CardContent className="p-4 text-center">
                   <CardHeader className="p-0">
                     <CardTitle className="text-sm font-semibold text-gray-800">
                       {item.productName}
                     </CardTitle>
+                    <CardDescription className="text-sm line-clamp-2">
+                      {item.description || "No description available"}
+                    </CardDescription>
                   </CardHeader>
                   <p className="text-sm text-gray-600">Rs {item.price}</p>
                 </CardContent>

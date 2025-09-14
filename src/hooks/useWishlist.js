@@ -10,7 +10,7 @@ export const useWishlist = () => {
   const { data: wishlist = [], isLoading } = useQuery({
     queryKey: [WISHLIST_KEY],
     queryFn: () => getWishlistByUserId(user?.id, token),
-    enabled: !!user?.id && !!token, // prevent fetching if no user
+    enabled: !!user?.id && !!token,
   });
 
   const create = useMutation({

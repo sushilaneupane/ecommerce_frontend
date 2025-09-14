@@ -32,7 +32,7 @@ function NewArrival() {
   return (
     <section className="container mx-auto px-4 py-10">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">🆕 Newly Arrived</h2>
+        <h2 className="text-2xl font-bold">🆕 Newly Arrived</h2>
 
         {/* ✅ Navigate to All Products */}
         <Link to="/products">
@@ -46,17 +46,17 @@ function NewArrival() {
       </div>
 
       {latestProducts?.length ? (
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {latestProducts.map((product) => (
             <Card
               key={product.id}
               className="w-full hover:shadow-lg transition-shadow duration-300"
             >
               <img
-                src={product.images[0].image}
-                alt={product.productName}
-                className="w-full h-40 object-contain rounded-t-md bg-white"
-              />
+      src={`http://localhost:3001/uploads/${product.images[0].image}`}
+      alt={product?.productName || "Product"}
+      className="w-full h-36 sm:h-40 md:h-48 object-cover rounded-t-xl bg-red-200"
+    />
               <CardContent className="p-3">
                 <CardHeader className="p-0 mb-2">
                   <CardTitle className="text-base">{product.productName}</CardTitle>

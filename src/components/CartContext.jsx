@@ -6,15 +6,10 @@ import { Input } from "@/components/ui/input";
 import { useCart } from "../hooks/useCart";
 
 function ShoppingCart() {
-
   const navigate = useNavigate();
-  const loggedInUser = JSON.parse(localStorage.getItem("user"));
-  const token = localStorage.getItem("token");
-
-  const { cartItems, isLoading, isError, updateMutation, deleteMutation } =
-    useCart(loggedInUser, token);
-
+  const { cartItems, isLoading, isError, updateMutation, deleteMutation } = useCart();
   const shippingCost = 50;
+
   const calculateTotal = () =>
     cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
@@ -28,10 +23,11 @@ function ShoppingCart() {
   if (isError) return <p className="text-center text-red-500">Failed to load cart.</p>;
 
   return (
-    <div className="container mx-auto my-10 px-4 ">
-      <div className="grid md:grid-cols-3 gap-6 mt-20">
+    <div className="container mx-auto my-10 px-2 sm:px-4 mt-15">
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         {/* Cart Items */}
-        <Card className="md:col-span-2 p-4">
+        <Card className="col-span-1 md:col-span-2 p-4 order-1 md:order-1 overflow-x-auto">
           <CardHeader>
             <CardTitle>Shopping Cart ({cartItems.length} Items)</CardTitle>
           </CardHeader>
@@ -42,8 +38,9 @@ function ShoppingCart() {
               <div className="space-y-4">
                 {cartItems.map((item) => (
                   <Card key={item.id} className="p-4">
-                    <div className="grid grid-cols-6 items-center gap-4">
-                      <div className="col-span-1">
+                    <div className="grid grid-cols-6 items-center gap-4 min-w-[600px]">
+                      {/* Product Image */}
+                      <div className="col-span-1 flex justify-center">
                         <img
                           src={
                             item.images?.[0]
@@ -54,14 +51,19 @@ function ShoppingCart() {
                           className="w-20 h-20 object-cover rounded-lg"
                         />
                       </div>
-                      <div className="col-span-2">
+
+                      {/* Product Name */}
+                      <div className="col-span-2 flex items-center">
                         <p className="font-semibold">{item.productName}</p>
                       </div>
-                      <div className="col-span-1 text-center">
+
+                      {/* Quantity Input */}
+                      <div className="col-span-1 flex justify-center">
                         <Input
                           type="number"
                           value={item.quantity}
                           min="1"
+                          className="w-20 text-center"
                           onChange={(e) =>
                             updateMutation.mutate({
                               cartItemId: item.id,
@@ -71,10 +73,14 @@ function ShoppingCart() {
                           }
                         />
                       </div>
-                      <div className="col-span-1 font-bold text-right">
+
+                      {/* Price */}
+                      <div className="col-span-1 flex justify-end font-bold">
                         Rs. {item.price}
                       </div>
-                      <div className="col-span-1 text-right">
+
+                      {/* Delete Button */}
+                      <div className="col-span-1 flex justify-end">
                         <Button
                           variant="outline"
                           size="sm"
@@ -92,7 +98,7 @@ function ShoppingCart() {
         </Card>
 
         {/* Order Summary */}
-        <Card className="p-4">
+        <Card className="col-span-1 p-4 order-2 md:order-2">
           <CardHeader>
             <CardTitle>Order Summary</CardTitle>
           </CardHeader>

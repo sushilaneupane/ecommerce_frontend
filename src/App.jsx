@@ -15,6 +15,7 @@ import ProfileCard from "./components/ProfileCard";
 import WishlistContext from "./components/WishlistContext";
 import ShoppingCart from "./components/CartContext";
 import Product from "./components/ProductSingle";
+import FeaturedProducts from "./components/Featured";
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
   <Route path="/login" element={<LoginForm />} />
   <Route path="/products" element={<AllProducts />} />
   <Route path="/newarrival" element={<NewArrival />} />
-  <Route path="/featured" element={<Featured />} />
+  <Route path="/featured" element={<FeaturedProducts />} />
   <Route path="/contact" element={<Contact />} />
   <Route path="/register" element={<RegisterForm />} />
   <Route path="/about" element={<AboutPage />} />

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
-import { useProducts } from "@/hooks/useProducts"; 
+import { useProducts } from "@/hooks/useProducts";
 
 function Featured() {
   const { data: products, isLoading, isError, error } = useProducts();
@@ -30,22 +30,22 @@ function Featured() {
   return (
     <section className="container mx-auto px-4 py-10">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">⭐Featured Products</h2>
+        <h2 className="text-2xl font-bold">⭐Featured Products</h2>
         <Button variant="outline" className="hover:bg-blue-600 hover:text-white">
           View All
         </Button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+     <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
         {featuredProducts?.map((product) => (
           <Card
             key={product.id}
             className="w-full hover:shadow-lg transition-shadow duration-300"
           >
             <img
-              src={product.images[0].image}
-              alt={product.productName}
-              className="w-full h-40 object-contain rounded-t-md bg-white"
+              src={`http://localhost:3001/uploads/${product.images[0].image}`}
+              alt={product?.productName || "Product"}
+              className="w-full h-36 sm:h-40 md:h-48 object-cover rounded-t-xl bg-red-200"
             />
             <CardContent className="p-3">
               <CardHeader className="p-0 mb-2">

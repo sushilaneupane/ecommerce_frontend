@@ -5,37 +5,49 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/context/AuthContext";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 const ProductOverview = () => {
-  const { isAuthenticated } = useAuth();
+  const { loggedInUser, token, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams();
-
   const { data: product, isLoading, isError } = useProductById(id);
-  const { create } = useCart();
-
- 
+  const { create } = useCart(loggedInUser, token);
   const [selectedImage, setSelectedImage] = useState("/image/cardimage.jpg");
+   const [formData, setFormData] = useState({
+        quantity: "1",
+    });
 
- 
   useEffect(() => {
     if (product?.images && product.images.length > 0) {
       setSelectedImage(`http://localhost:3001/uploads/${product.images[0]}`);
     }
   }, [product]);
 
-  const handleAddToCart = async () => {
-    try {
-      if (!isAuthenticated) {
-        navigate("/login");
-        return;
-      }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-      await create.mutateAsync({ productId: product.id });
-      console.log(" Added to cart:", product.id);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const data = {
+        ...formData,
+        productId: product.id,
+      };
+
+      await create.mutateAsync(
+       data 
+      
+      );
       navigate("/cart");
     } catch (error) {
-      console.error("Failed to add to cart:", error);
+      console.log(error);
     }
   };
 
@@ -44,20 +56,19 @@ const ProductOverview = () => {
   if (isError) return <p className="text-center mt-10">Failed to load product</p>;
 
   return (
-    <div className="flex justify-center p-5 mt-10">
-      <div className="flex flex-col lg:flex-row lg:gap-1 max-w-6xl w-full ">
-     
-        <Card className="lg:w-1/2 flex flex-col justify-center items-center mt-0">
-         
-          <div className="w-full h-64 sm:h-80 md:h-[60vh] lg:h-[70vh] mt-0 overflow-auto">
+    <div className="flex justify-center p-5 mt-15">
+      <div className="flex flex-col lg:flex-row lg:gap-1 max-w-6xl w-full">
+
+        <Card className="lg:w-1/2 flex flex-col justify-center items-center">
+          <div className="w-full h-64 sm:h-80 md:h-[60vh] lg:h-[70vh] overflow-y-auto">
             <img
               src={selectedImage}
               alt={product.productName || "Product"}
-              className="w-full object-contain rounded-lg shadow-lg bg-red-500"
+              className="w-full object-contain rounded-lg shadow-lg"
             />
           </div>
 
-       
+
           <div className="flex gap-2 overflow-x-auto">
             {product.images.map((img, index) => (
               <img
@@ -74,9 +85,9 @@ const ProductOverview = () => {
           </div>
         </Card>
 
-  
+
         <Card className="lg:w-1/2 bg-gray-50 p-4 sm:p-6 flex flex-col justify-start">
-          <CardHeader className="p-0 mb-2">
+          <CardHeader className="p-0">
             <CardTitle className="text-xl sm:text-2xl font-bold">
               {product.productName}
             </CardTitle>
@@ -86,34 +97,38 @@ const ProductOverview = () => {
             {product.description}
           </CardDescription>
 
-          <p className="text-lg sm:text-xl font-bold mb-4">
-            Price: ${product.price}
+          <p className="text-lg sm:text-xl font-bold ">
+            Price: Rs: {product.price}
           </p>
-
-       
-          <div className="mb-6">
-            <span className="font-semibold mr-4 text-sm sm:text-base">Size:</span>
-            <div className="flex flex-wrap gap-2">
-              {["XS", "S", "M", "L", "XL"].map((size) => (
-                <button
-                  key={size}
-                  className="border border-gray-300 rounded px-3 py-1 text-sm sm:text-base hover:bg-gray-200 transition"
-                >
-                  {size}
-                </button>
-              ))}
+          <form onSubmit={handleSubmit} className="space-y-4 w-1/4">
+            <div className="flex flex-col">
+              <Label  htmlFor="quantity"className="font-bold mb-3">Quantity:</Label>
+              <Input
+                id="quantity"
+                name="quantity"
+                type="number"
+                min={1}
+                value={formData.quantity}
+                defaultValue={1}
+                onChange={handleChange}
+              />
             </div>
-          </div>
-
-       
-          <Button
-            onClick={handleAddToCart}
-            variant="ghost"
-            className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-700 transition w-full sm:w-40 bg-gray-800 text-white text-sm sm:text-base"
+             <Button
+          
+            className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-700 transition w-full sm:w-40 bg-gray-800 text-white"
           >
             Add to Cart
           </Button>
+          </form>
+         
+           <div>
+                        <h5 className="text-lg sm:text-xl font-bold mb-4">Return and Refund Policy</h5>
+                        <p>
+                           Returns accepted within 14 days in original condition. Refunds processed after inspection. For damaged or defective items, contact us for a full refund or replacement.
+                        </p>
+                    </div>
         </Card>
+        
       </div>
     </div>
   );

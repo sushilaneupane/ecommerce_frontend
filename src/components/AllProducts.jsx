@@ -149,9 +149,9 @@ function AllProducts() {
           )}
         </aside>
 
-        {/* Products Grid */}
+       
         <main className={showCategories ? "md:col-span-3" : "md:col-span-4"}>
-          {/* Header: Title + Count + Sort */}
+      
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
             <h3 className="text-2xl font-semibold">
               {selectedCategory === "All" ? "All Products" : selectedCategory}

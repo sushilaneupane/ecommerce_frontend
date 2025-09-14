@@ -35,9 +35,8 @@ const ProductCard = ({ product }) => {
   return (
  
 
-<Link to={`/product/${product.id}`} className="w-full">
-  <Card className="w-full sm:w-64 hover:shadow-lg transition-shadow duration-300 p-0 cursor-pointer">
-    {/* Image at the top, full width */}
+  <Link to={`/product/${product.id}`} className="w-full">
+  <Card className="w-full sm:w-64 cursor-pointer hover:shadow-lg transition-shadow duration-300 p-0 cursor-pointer">
     <img
       src={`http://localhost:3001/uploads/${product.images[0].image}`}
       alt={product?.productName || "Product"}
