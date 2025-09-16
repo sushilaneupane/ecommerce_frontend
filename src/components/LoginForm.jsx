@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import homeImage4 from "@/assets/homeImage4.jpg";
-import { useAuth } from "../context/AuthContext"; 
+import { useAuth } from "../context/AuthContext";
 import {
   Card,
   CardContent,
@@ -16,19 +16,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
-
-import { useLoginUser } from "@/hooks/useUser.js"; 
-
+import { toast } from "sonner";
+import { useLoginUser } from "@/hooks/useUser.js";
 
 const loginSchema = z.object({
-  email: z.string().nonempty("Email is required").email("Please enter a valid email."),
-  password: z.string().nonempty("Password is required").min(3, "Password must be at least 3 characters"),
+  email: z
+    .string()
+    .nonempty("Email is required")
+    .email("Please enter a valid email."),
+  password: z
+    .string()
+    .nonempty("Password is required")
+    .min(3, "Password must be at least 3 characters"),
 });
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const { mutate: loginUser, isPending } = useLoginUser();
-   const { login } = useAuth(); 
+  const { login } = useAuth();
 
   const {
     register,
@@ -38,27 +43,29 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
- 
   const onSubmit = (data) => {
     loginUser(data, {
       onSuccess: (response) => {
-     
         if (response?.data?.token) {
           localStorage.setItem("authToken", response.data.token);
           localStorage.setItem("user", JSON.stringify(response.data.user));
+          toast.success("Logged in successfully!");
         }
-       
+
         navigate("/");
       },
       onError: (error) => {
-        console.error("Login failed:", error?.message || error);
+        toast.error("Login failed:", error?.message || error);
+
+        toast.error(
+          error?.response?.data?.error || "Invalid email or password. Please try again."
+        );
       },
     });
   };
 
   return (
     <section className="relative h-screen w-full">
-     
       <img
         src={homeImage4}
         alt="Hero Background"
@@ -66,7 +73,6 @@ export default function LoginForm() {
       />
       <div className="absolute inset-0 bg-black/50" />
 
-     
       <div className="relative z-10 flex items-center justify-start h-full px-4 sm:px-10 md:px-20 lg:px-40">
         <Card className="w-full max-w-md bg-white/90 shadow-xl rounded-2xl">
           <CardHeader className="text-center">
@@ -80,7 +86,6 @@ export default function LoginForm() {
 
           <CardContent>
             <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-            
               <div className="space-y-1">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -94,7 +99,6 @@ export default function LoginForm() {
                 )}
               </div>
 
-             
               <div className="space-y-1">
                 <Label htmlFor="password">Password</Label>
                 <Input
@@ -104,7 +108,9 @@ export default function LoginForm() {
                   {...register("password")}
                 />
                 {errors.password && (
-                  <p className="text-red-500 text-sm">{errors.password.message}</p>
+                  <p className="text-red-500 text-sm">
+                    {errors.password.message}
+                  </p>
                 )}
                 <div className="text-right">
                   <Link
@@ -116,7 +122,6 @@ export default function LoginForm() {
                 </div>
               </div>
 
-              
               <Button type="submit" className="w-full" disabled={isPending}>
                 {isPending ? "Logging in..." : "Login"}
               </Button>

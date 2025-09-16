@@ -1,4 +1,4 @@
-// src/api/cartApi.js
+
 import axios from "axios";
 
 const api = axios.create({
@@ -24,5 +24,21 @@ export const getCartsByUserId = async (userId, token) => {
   return response.data;
 };
 
+export const deleteCart = async (id, token) => {
+  const response =await api.delete(`/carts/${id}`,
+     { headers: {
+       Authorization: `Bearer ${token}` } });
 
+  return response.data;
+};
+
+export const updateCart = async (id, quantity, userId, productId) => {
+  const response = await api.patch(`/carts/${id}`, 
+    cartData, {
+
+    headers: {
+       Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
 

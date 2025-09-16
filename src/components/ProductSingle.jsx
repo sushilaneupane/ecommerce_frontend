@@ -7,6 +7,7 @@ import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/context/AuthContext";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import {toast } from "sonner";
 
 const ProductOverview = () => {
   const { loggedInUser, token, isAuthenticated } = useAuth();
@@ -41,12 +42,11 @@ const ProductOverview = () => {
         productId: product.id,
       };
 
-      await create.mutateAsync(
-       data 
-      
-      );
+      await create.mutateAsync(data);
+       toast.success("product added successfully!");
       navigate("/cart");
     } catch (error) {
+      toast.error( error?.response?.data)
       console.log(error);
     }
   };

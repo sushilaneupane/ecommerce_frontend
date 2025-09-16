@@ -13,6 +13,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 import { useCreateUser } from "@/hooks/useUser.js";
 
@@ -44,11 +45,11 @@ function RegisterForm() {
             { ...values, role: "USER" },
             {
                 onSuccess: () => {
-                    console.log(" User created successfully!");
+                    toast.success("User created successfully!");
                     setTimeout(() => navigate("/login"), 500);
                 },
                 onError: (error) => {
-                    console.error("Failed to create account:", error?.message || error);
+                    toast.error("Failed to create account:", error?.message || error);
                 },
             }
         );

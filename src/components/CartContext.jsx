@@ -1,21 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "../hooks/useCart";
+import { toast } from "sonner";
+import { Trash2 } from "lucide-react";
 
 function ShoppingCart() {
   const navigate = useNavigate();
-  const { cartItems, isLoading, isError, updateMutation, deleteMutation } = useCart();
+  const { cartItems, isLoading, isError, remove, update } = useCart();
   const shippingCost = 50;
+  const [loadingId, setLoadingId] = useState(null);
+  const [updatingId, setUpdatingId] = useState(null);
+
+  
+  const handleRemove = (cartId) => {
+    setLoadingId(cartId);
+    remove.mutate(
+      { id: cartId },
+      {
+        onSuccess: () => {
+          setLoadingId(null);
+          toast.success("Item removed from cart!");
+        },
+        onError: () => {
+          setLoadingId(null);
+          toast.error("Failed to remove item");
+        },
+      }
+    );
+  };
+
+  // Update quantity
+  const handleUpdateCart = (cartItemId, newQuantity) => {
+    if (newQuantity < 1) return;
+    setUpdatingId(cartItemId);
+    update.mutate(
+      { id: cartItemId, cartData: { quantity: newQuantity } },
+      {
+        onSuccess: () => {
+          setUpdatingId(null);
+          toast.success("Cart updated successfully");
+        },
+        onError: () => {
+          setUpdatingId(null);
+          toast.error("Failed to update cart");
+        },
+      }
+    );
+  };
+
 
   const calculateTotal = () =>
     cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
+  
   const handleCheckout = () => {
     if (cartItems.length > 0) {
       navigate("/Orders", { state: { cartItems } });
+      toast.success("Order added successfully!");
     }
   };
 
@@ -24,10 +68,9 @@ function ShoppingCart() {
 
   return (
     <div className="container mx-auto my-10 px-2 sm:px-4 mt-15">
-      {/* Main Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-        {/* Cart Items */}
-        <Card className="col-span-1 md:col-span-2 p-4 order-1 md:order-1 overflow-x-auto">
+       
+        <Card className="col-span-1 md:col-span-2 p-4 overflow-x-auto">
           <CardHeader>
             <CardTitle>Shopping Cart ({cartItems.length} Items)</CardTitle>
           </CardHeader>
@@ -37,9 +80,9 @@ function ShoppingCart() {
             ) : (
               <div className="space-y-4">
                 {cartItems.map((item) => (
-                  <Card key={item.id} className="p-4">
+                  <Card key={item.cartId || item.id} className="p-4">
                     <div className="grid grid-cols-6 items-center gap-4 min-w-[600px]">
-                      {/* Product Image */}
+                    
                       <div className="col-span-1 flex justify-center">
                         <img
                           src={
@@ -52,12 +95,12 @@ function ShoppingCart() {
                         />
                       </div>
 
-                      {/* Product Name */}
+                    
                       <div className="col-span-2 flex items-center">
                         <p className="font-semibold">{item.productName}</p>
                       </div>
 
-                      {/* Quantity Input */}
+                  
                       <div className="col-span-1 flex justify-center">
                         <Input
                           type="number"
@@ -65,28 +108,28 @@ function ShoppingCart() {
                           min="1"
                           className="w-20 text-center"
                           onChange={(e) =>
-                            updateMutation.mutate({
-                              cartItemId: item.id,
-                              productId: item.productId,
-                              newQuantity: parseInt(e.target.value) || 1,
-                            })
+                            handleUpdateCart(item.cartId, parseInt(e.target.value) || 1)
                           }
                         />
                       </div>
 
-                      {/* Price */}
+                     
                       <div className="col-span-1 flex justify-end font-bold">
                         Rs. {item.price}
                       </div>
 
-                      {/* Delete Button */}
+                      
                       <div className="col-span-1 flex justify-end">
                         <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => deleteMutation.mutate(item.cartId)}
+                          disabled={loadingId === item.cartId || updatingId === item.cartId}
+                          onClick={() => handleRemove(item.cartId)}
+                          className="bg-red-500 text-white px-3 py-1 rounded flex items-center justify-center"
                         >
-                          🗑️
+                          {loadingId === item.cartId
+                            ? "Removing..."
+                            : updatingId === item.cartId
+                            ? "Updating..."
+                            : <Trash2 className="w-4 h-4" />}
                         </Button>
                       </div>
                     </div>
@@ -97,8 +140,8 @@ function ShoppingCart() {
           </CardContent>
         </Card>
 
-        {/* Order Summary */}
-        <Card className="col-span-1 p-4 order-2 md:order-2">
+       
+        <Card className="col-span-1 p-4">
           <CardHeader>
             <CardTitle>Order Summary</CardTitle>
           </CardHeader>

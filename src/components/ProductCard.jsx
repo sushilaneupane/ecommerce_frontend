@@ -12,6 +12,8 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 
 const ProductCard = ({ product }) => {
   const { isAuthenticated } = useAuth();
@@ -25,10 +27,10 @@ const ProductCard = ({ product }) => {
         return;
       }
       await create.mutateAsync({ productId: product.id });
-      console.log("✅ Added to favourites:", product.id);
+      toast.success("✅ Added to favourites");
       navigate("/wishlist");
     } catch (error) {
-      console.error("Failed to add to favourites:", error);
+      toast.error("Failed to add to favourites");
     }
   };
 
@@ -57,7 +59,7 @@ const ProductCard = ({ product }) => {
       {/* Price and Favourites button */}
       <div className="mt-2 flex items-center justify-between">
         <span className="font-bold text-sm">
-          {product?.price ? `$${product.price}` : "N/A"}
+          {product?.price ? `Rs ${product.price}` : "N/A"}
         </span>
         <Button
           onClick={(e) => {
