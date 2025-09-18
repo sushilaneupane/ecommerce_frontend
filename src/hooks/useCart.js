@@ -45,6 +45,7 @@ const update = useMutation({
     queryClient.invalidateQueries([CART_KEY, user?.id]);
   },
 });
+
   return {
   cartItems,
   isLoading,

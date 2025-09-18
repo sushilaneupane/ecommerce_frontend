@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Eye, EyeOff, Search } from "lucide-react";
+import {FolderOpen, Folder, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -87,15 +87,15 @@ function AllProducts() {
         {/* Sidebar */}
         <aside className="col-span-1 bg-gray-50 p-4 rounded-lg shadow flex flex-col">
           {/* Toggle Categories */}
-          <div className="flex justify-start mb-4">
+          <div className="flex justify-end mb-4">
             <Button
               onClick={() => setShowCategories(!showCategories)}
               className="flex items-center gap-2 bg-white hover:bg-gray-100 shadow-sm"
             >
               {showCategories ? (
-                <EyeOff className="h-4 w-4 text-black" />
+                <FolderOpen className="h-4 w-4 text-black" />
               ) : (
-                <Eye className="h-4 w-4 text-black" />
+                <Folder className="h-4 w-4 text-black" />
               )}
             </Button>
           </div>
@@ -124,9 +124,8 @@ function AllProducts() {
               )}
               <ul className="space-y-2">
                 <li
-                  className={`cursor-pointer capitalize ${
-                    selectedCategory === ""? "text-blue-600 font-semibold" : ""
-                  }`}
+                  className={`cursor-pointer capitalize ${selectedCategory === "" ? "text-blue-600 font-semibold" : ""
+                    }`}
                   onClick={() => setSelectedCategory("All")}
                 >
                   All
@@ -134,11 +133,10 @@ function AllProducts() {
                 {categories?.map((cat, index) => (
                   <li
                     key={index}
-                    className={`cursor-pointer capitalize hover:text-blue-600 ${
-                      selectedCategory === cat.name
+                    className={`cursor-pointer capitalize hover:text-blue-600 ${selectedCategory === cat.name
                         ? "text-blue-600 font-semibold"
                         : ""
-                    }`}
+                      }`}
                     onClick={() => setSelectedCategory(cat.name)}
                   >
                     {cat.name}
@@ -149,9 +147,9 @@ function AllProducts() {
           )}
         </aside>
 
-       
+
         <main className={showCategories ? "md:col-span-3" : "md:col-span-4"}>
-      
+
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
             <h3 className="text-2xl font-semibold">
               {selectedCategory === "All" ? "All Products" : selectedCategory}
