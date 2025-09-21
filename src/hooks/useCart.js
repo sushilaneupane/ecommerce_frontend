@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getCartsByUserId, createCart, deleteCart } from "../api/cartApi"; 
+import { getCartsByUserId, createCart, deleteCart, updateCart } from "../api/cartApi"; 
 import { CART_KEY } from "@/utils/queryKeys";
 
 export function useCart() {
@@ -7,14 +7,12 @@ export function useCart() {
   const token = localStorage.getItem("authToken");
   const user = JSON.parse(localStorage.getItem("user"));
 
-  
   const { data: cartItems = [], isLoading, isError } = useQuery({
     queryKey: [CART_KEY, user?.id],
     queryFn: () => getCartsByUserId(user?.id, token),
     enabled: !!user?.id && !!token,
   });
 
- 
   const create = useMutation({
     mutationFn: (cartData) => {
       const payload = { ...cartData, userId: user?.id };
@@ -25,34 +23,32 @@ export function useCart() {
     },
   });
 
- 
   const remove = useMutation({
     mutationFn: ({ id }) => deleteCart(id, token),
     onSuccess: () => {
       queryClient.invalidateQueries([CART_KEY, user?.id]);
     },
     onError: (error) => {
-      console.error(
-        error?.response?.data?.message || "Failed to remove item from cart"
-      );
+      console.error(error?.response?.data?.message || "Failed to remove item from cart");
     },
   });
-  
-const update = useMutation({
-  mutationFn: ({ id, cartData }) => updateCart(id, cartData, token),
-  onSuccess: () => {
-    
-    queryClient.invalidateQueries([CART_KEY, user?.id]);
-  },
-});
+
+  const update = useMutation({
+    mutationFn: ({ id, cartData }) => updateCart(id, cartData, token),
+    onSuccess: () => {
+      queryClient.invalidateQueries([CART_KEY, user?.id]);
+    },
+    onError: (error) => {
+      console.error(error?.response?.data?.message || "Failed to update cart");
+    },
+  });
 
   return {
-  cartItems,
-  isLoading,
-  isError,
-  create,
-  remove,
-  update,
-};
-
+    cartItems,
+    isLoading,
+    isError,
+    create,
+    remove,
+    update,
+  };
 }

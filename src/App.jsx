@@ -18,6 +18,7 @@ import WishlistContext from "./components/WishlistContext";
 import ShoppingCart from "./components/CartContext";
 import Product from "./components/ProductSingle";
 import FeaturedProducts from "./components/Featured";
+import CheckoutPage from "./components/Order";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="/wishlist" element={<WishlistContext />} />
           <Route path="/cart" element={<ShoppingCart />} />
           <Route path="/product/:id" element={<Product />} />
+          <Route path="/order" element={<CheckoutPage/>}/>
         </Routes>
       </main>
 

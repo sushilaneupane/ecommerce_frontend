@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://ecommerce-backend-sivx.onrender.com/api",
+  baseURL: import.meta.env.VITE_BASEURL,
 });
 export const createCart = async (cartData, token) => {
   console.log(cartData, token);
@@ -31,14 +31,20 @@ export const deleteCart = async (id, token) => {
 
   return response.data;
 };
+export const updateCart = async (id, cartData, token) => {
+  try {
+    console.log("Sending update request:", { id, ...cartData });
 
-export const updateCart = async (id, quantity, userId, productId) => {
-  const response = await api.patch(`/carts/${id}`, 
-    cartData, {
+    const response = await api.patch(`/carts/${id}`, cartData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-    headers: {
-       Authorization: `Bearer ${token}` },
-  });
-  return response.data;
+    console.log("Update response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating cart:", error.response?.data || error.message);
+    throw error;
+  }
 };
+
 

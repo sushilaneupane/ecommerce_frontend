@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://ecommerce-backend-sivx.onrender.com/api",
+  baseURL: import.meta.env.VITE_BASEURL,
 });
 
-// ✅ Create wishlist with token in headers
 export const createwishlist = async (wishlistData, token) => {
   const response = await api.post("/wishlist",wishlistData,
     {
@@ -16,7 +15,6 @@ export const createwishlist = async (wishlistData, token) => {
   return response.data;
 };
 
-// ✅ Get wishlist by userId with token in headers
 export const getWishlistByUserId = async (userId, token) => {
   const response = await api.get(`/wishlist/user/${userId}`, {
     headers: {

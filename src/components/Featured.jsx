@@ -36,17 +36,22 @@ function Featured() {
         </Button>
       </div>
 
-     <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
         {featuredProducts?.map((product) => (
           <Card
             key={product.id}
             className="w-full hover:shadow-lg transition-shadow duration-300"
           >
             <img
-              src={`http://localhost:3001/uploads/${product.images[0].image}`}
+              src={
+                product?.images?.length
+                  ? `http://localhost:3001/uploads/${product.images[0].image}`
+                  : "/placeholder.jpg" 
+              }
               alt={product?.productName || "Product"}
               className="w-full h-36 sm:h-40 md:h-48 object-cover rounded-t-xl bg-red-200"
             />
+
             <CardContent className="p-3">
               <CardHeader className="p-0 mb-2">
                 <CardTitle className="text-base">{product.productName}</CardTitle>

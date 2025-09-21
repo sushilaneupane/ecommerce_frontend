@@ -5,7 +5,6 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import homeImage4 from "@/assets/homeImage4.jpg";
 import { useAuth } from "../context/AuthContext";
 import {
   Card,
@@ -51,91 +50,80 @@ export default function LoginForm() {
           localStorage.setItem("user", JSON.stringify(response.data.user));
           toast.success("Logged in successfully!");
         }
-
         navigate("/");
       },
       onError: (error) => {
-        toast.error("Login failed:", error?.message || error);
-
         toast.error(
-          error?.response?.data?.error || "Invalid email or password. Please try again."
+          error?.response?.data?.error ||
+            "Invalid email or password. Please try again."
         );
       },
     });
   };
 
   return (
-    <section className="relative h-screen w-full">
-      <img
-        src={homeImage4}
-        alt="Hero Background"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-      <div className="absolute inset-0 bg-black/50" />
+    <section className="flex items-center justify-center h-screen bg-gray-50 px-4 bg-gray-200">
+      <Card className="w-full max-w-md bg-white shadow-xl rounded-2xl">
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold mt-5">
+            Login
+          </CardTitle>
+          <CardDescription className="text-sm sm:text-base md:text-base">
+            Enter your credentials to sign in
+          </CardDescription>
+        </CardHeader>
 
-      <div className="relative z-10 flex items-center justify-start h-full px-4 sm:px-10 md:px-20 lg:px-40">
-        <Card className="w-full max-w-md bg-white/90 shadow-xl rounded-2xl">
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold">
-              Login
-            </CardTitle>
-            <CardDescription className="text-sm sm:text-base md:text-base">
-              Enter your credentials to sign in
-            </CardDescription>
-          </CardHeader>
+        <CardContent>
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-1">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="text"
+                placeholder="Enter your email"
+                {...register("email")}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
+            </div>
 
-          <CardContent>
-            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-              <div className="space-y-1">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="text"
-                  placeholder="Enter your email"
-                  {...register("email")}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm">{errors.email.message}</p>
-                )}
+            <div className="space-y-1">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                {...register("password")}
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
+              )}
+              <div className="text-right">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-blue-600 hover:underline"
+                >
+                  Forgot Password?
+                </Link>
               </div>
+            </div>
 
-              <div className="space-y-1">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  {...register("password")}
-                />
-                {errors.password && (
-                  <p className="text-red-500 text-sm">
-                    {errors.password.message}
-                  </p>
-                )}
-                <div className="text-right">
-                  <Link
-                    to="/forgot-password"
-                    className="text-sm text-blue-600 hover:underline"
-                  >
-                    Forgot Password?
-                  </Link>
-                </div>
-              </div>
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+        </CardContent>
 
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? "Logging in..." : "Login"}
-              </Button>
-            </form>
-          </CardContent>
-
-          <CardFooter className="text-sm text-center text-gray-600">
-            Don’t have an account?{" "}
-            <Link to="/register" className="text-blue-500 hover:underline ml-1">
-              Sign up
-            </Link>
-          </CardFooter>
-        </Card>
-      </div>
+        <CardFooter className="text-sm text-center text-gray-600 mb-5">
+          Don’t have an account?{" "}
+          <Link to="/register" className="text-blue-500 hover:underline ml-1">
+            Sign up
+          </Link>
+        </CardFooter>
+      </Card>
     </section>
   );
 }

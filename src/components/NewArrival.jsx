@@ -7,9 +7,9 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useProducts } from "@/hooks/useProducts"; 
+import { useProducts } from "@/hooks/useProducts";
 import { Heart } from "lucide-react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 
 function NewArrival() {
   const { data: products, isLoading, isError, error } = useProducts();
@@ -53,10 +53,15 @@ function NewArrival() {
               className="w-full hover:shadow-lg transition-shadow duration-300"
             >
               <img
-      src={`http://localhost:3001/uploads/${product.images[0].image}`}
-      alt={product?.productName || "Product"}
-      className="w-full h-36 sm:h-40 md:h-48 object-cover rounded-t-xl bg-red-200"
-    />
+                src={
+                  product?.images?.length
+                    ? `http://localhost:3001/uploads/${product.images[0].image}`
+                    : "/placeholder.jpg" 
+                }
+                alt={product?.productName || "Product"}
+                className="w-full h-36 sm:h-40 md:h-48 object-cover rounded-t-xl bg-red-200"
+              />
+
               <CardContent className="p-3">
                 <CardHeader className="p-0 mb-2">
                   <CardTitle className="text-base">{product.productName}</CardTitle>

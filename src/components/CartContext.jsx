@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useCart } from "../hooks/useCart";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function ShoppingCart() {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ function ShoppingCart() {
   const [loadingId, setLoadingId] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
 
-  
+  // ✅ Remove cart item
   const handleRemove = (cartId) => {
     setLoadingId(cartId);
     remove.mutate(
@@ -32,12 +33,23 @@ function ShoppingCart() {
     );
   };
 
-  // Update quantity
-  const handleUpdateCart = (cartItemId, newQuantity) => {
+
+
+  const handleUpdateCart = (cartItemId, newQuantity, userId, productId) => {
     if (newQuantity < 1) return;
     setUpdatingId(cartItemId);
+
+    console.log({ cartItemId, newQuantity, userId, productId }, "Updating cart...");
+
     update.mutate(
-      { id: cartItemId, cartData: { quantity: newQuantity } },
+      {
+        id: cartItemId,
+        cartData: {
+          quantity: newQuantity,
+          userId,
+          productId,
+        },
+      },
       {
         onSuccess: () => {
           setUpdatingId(null);
@@ -55,7 +67,6 @@ function ShoppingCart() {
   const calculateTotal = () =>
     cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
-  
   const handleCheckout = () => {
     if (cartItems.length > 0) {
       navigate("/Orders", { state: { cartItems } });
@@ -67,9 +78,9 @@ function ShoppingCart() {
   if (isError) return <p className="text-center text-red-500">Failed to load cart.</p>;
 
   return (
-    <div className="container mx-auto my-10 px-2 sm:px-4 mt-15">
+    <div className="container mx-auto my-10 px-2 sm:px-4 mt-30">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-       
+        {/* Cart Items */}
         <Card className="col-span-1 md:col-span-2 p-4 overflow-x-auto">
           <CardHeader>
             <CardTitle>Shopping Cart ({cartItems.length} Items)</CardTitle>
@@ -82,7 +93,7 @@ function ShoppingCart() {
                 {cartItems.map((item) => (
                   <Card key={item.cartId || item.id} className="p-4">
                     <div className="grid grid-cols-6 items-center gap-4 min-w-[600px]">
-                    
+                      {/* Product Image */}
                       <div className="col-span-1 flex justify-center">
                         <img
                           src={
@@ -95,12 +106,12 @@ function ShoppingCart() {
                         />
                       </div>
 
-                    
+                      {/* Product Name */}
                       <div className="col-span-2 flex items-center">
                         <p className="font-semibold">{item.productName}</p>
                       </div>
 
-                  
+                      {/* Quantity Input */}
                       <div className="col-span-1 flex justify-center">
                         <Input
                           type="number"
@@ -108,17 +119,21 @@ function ShoppingCart() {
                           min="1"
                           className="w-20 text-center"
                           onChange={(e) =>
-                            handleUpdateCart(item.cartId, parseInt(e.target.value) || 1)
-                          }
+                            handleUpdateCart(
+                              item.cartId,
+                              parseInt(e.target.value) || 1,
+                              item.userId,
+                              item.productId
+                            )}
                         />
                       </div>
 
-                     
+                      {/* Price */}
                       <div className="col-span-1 flex justify-end font-bold">
                         Rs. {item.price}
                       </div>
 
-                      
+                      {/* Remove Button */}
                       <div className="col-span-1 flex justify-end">
                         <Button
                           disabled={loadingId === item.cartId || updatingId === item.cartId}
@@ -128,8 +143,8 @@ function ShoppingCart() {
                           {loadingId === item.cartId
                             ? "Removing..."
                             : updatingId === item.cartId
-                            ? "Updating..."
-                            : <Trash2 className="w-4 h-4" />}
+                              ? "Updating..."
+                              : <Trash2 className="w-4 h-4" />}
                         </Button>
                       </div>
                     </div>
@@ -140,8 +155,8 @@ function ShoppingCart() {
           </CardContent>
         </Card>
 
-       
-        <Card className="col-span-1 p-4">
+        {/* Order Summary */}
+        <Card className="col-span-1 p-4 mt-10">
           <CardHeader>
             <CardTitle>Order Summary</CardTitle>
           </CardHeader>
@@ -159,14 +174,21 @@ function ShoppingCart() {
               <span>Total</span>
               <span>Rs. {(calculateTotal() + shippingCost).toFixed(2)}</span>
             </div>
-            <Button
-              className="w-full"
-              variant="success"
-              disabled={cartItems.length === 0}
-              onClick={handleCheckout}
+
+
+            <Link
+              to="/order"
+              state={{ cartItems }} 
             >
-              Proceed to Checkout ({cartItems.length})
-            </Button>
+              <Button
+                className="w-full"
+                variant="success"
+                disabled={cartItems.length === 0}
+              >
+                Proceed to Checkout ({cartItems.length})
+              </Button>
+            </Link>
+
           </CardContent>
         </Card>
       </div>

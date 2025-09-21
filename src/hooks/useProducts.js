@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchProductById, fetchProducts } from "../api/productApi";
 
-// Hook to fetch all products
 export const useProducts = () => {
   return useQuery({
     queryKey: ["products"],
@@ -9,12 +8,12 @@ export const useProducts = () => {
   });
 };
 
-// Hook to fetch a single product by ID
+
 export const useProductById = (id) => {
   return useQuery({
-    queryKey: ["product", id], // include id in query key
-    queryFn: () => fetchProductById(id), // pass id to API function
-    enabled: !!id, // only run query if id exists
+    queryKey: ["product", id], 
+    queryFn: () => fetchProductById(id), 
+    enabled: !!id,
      
     select: (data) => ({
       ...data,

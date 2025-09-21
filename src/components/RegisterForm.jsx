@@ -56,7 +56,7 @@ function RegisterForm() {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
+        <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4 bg-gray-200">
             <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
                 <h2 className="text-2xl font-semibold text-center mb-6">
                     Create Account
@@ -123,7 +123,7 @@ function RegisterForm() {
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <input
+                                        <Input
                                             id="password"
                                             type="password"
                                             placeholder="Enter your password"

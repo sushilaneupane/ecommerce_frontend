@@ -1,15 +1,25 @@
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_BASEURL,
+});
 
 export const fetchProducts = async () => {
-  const response = await fetch("https://ecommerce-backend-sivx.onrender.com/api/products");
-  if (!response.ok) {
-    throw new Error("Failed to fetch products");
+  try {
+    const response = await api.get(`/products`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching products:", error.response?.data || error.message);
+    throw error;
   }
-  return response.json();
 };
+
 export const fetchProductById = async (id) => {
-  const response = await fetch(`https://ecommerce-backend-sivx.onrender.com/api/products/${id}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch product");
+  try {
+    const response = await api.get(`/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching product with id ${id}:`, error.response?.data || error.message);
+    throw error;
   }
-  return response.json();
 };
