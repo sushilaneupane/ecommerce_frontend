@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import {FolderOpen, Folder, Search } from "lucide-react";
+import { FolderOpen, Folder, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,28 +35,24 @@ function AllProducts() {
     error: productsError,
   } = useProducts();
 
-  // Extract actual products array safely
   const products = productsResponse?.data || [];
 
   // Filter & sort products
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    // Filter by category
     if (selectedCategory !== "All") {
       result = result.filter(
         (p) => p.categoryName?.toLowerCase() === selectedCategory.toLowerCase()
       );
     }
 
-    // Filter by search query
     if (searchQuery.trim()) {
       result = result.filter((p) =>
         p.productName.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // Sorting
     switch (sortOption) {
       case "LowToHigh":
         result.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
@@ -82,11 +78,9 @@ function AllProducts() {
 
   return (
     <div className="container mx-auto px-4 py-8 mt-9">
-
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Sidebar */}
         <aside className="col-span-1 bg-gray-50 p-4 rounded-lg shadow flex flex-col">
-          {/* Toggle Categories */}
           <div className="flex justify-end mb-4">
             <Button
               onClick={() => setShowCategories(!showCategories)}
@@ -124,8 +118,9 @@ function AllProducts() {
               )}
               <ul className="space-y-2">
                 <li
-                  className={`cursor-pointer capitalize ${selectedCategory === "" ? "text-blue-600 font-semibold" : ""
-                    }`}
+                  className={`cursor-pointer capitalize ${
+                    selectedCategory === "All" ? "text-blue-600 font-semibold" : ""
+                  }`}
                   onClick={() => setSelectedCategory("All")}
                 >
                   All
@@ -133,10 +128,11 @@ function AllProducts() {
                 {categories?.map((cat, index) => (
                   <li
                     key={index}
-                    className={`cursor-pointer capitalize hover:text-blue-600 ${selectedCategory === cat.name
+                    className={`cursor-pointer capitalize hover:text-blue-600 ${
+                      selectedCategory === cat.name
                         ? "text-blue-600 font-semibold"
                         : ""
-                      }`}
+                    }`}
                     onClick={() => setSelectedCategory(cat.name)}
                   >
                     {cat.name}
@@ -147,9 +143,8 @@ function AllProducts() {
           )}
         </aside>
 
-
+        {/* Main Content */}
         <main className={showCategories ? "md:col-span-3" : "md:col-span-4"}>
-
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
             <h3 className="text-2xl font-semibold">
               {selectedCategory === "All" ? "All Products" : selectedCategory}
@@ -171,13 +166,13 @@ function AllProducts() {
             </Select>
           </div>
 
-          {/* Product Cards */}
+          {/* Product Grid */}
           {isProductsLoading && <p>Loading products...</p>}
           {isProductsError && (
             <p className="text-red-500">Error: {productsError.message}</p>
           )}
 
-          <div className="grid [grid-template-columns:repeat(auto-fit,minmax(16rem,1fr))] gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredProducts?.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

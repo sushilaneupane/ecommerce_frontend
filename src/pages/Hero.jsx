@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 import homeImage from "@/assets/homeImage.jpg"
 import NewArrival from "./NewArrival"
-import Featured from "./Featured"
+import Featured from "../pages/Featured"
 
 
 

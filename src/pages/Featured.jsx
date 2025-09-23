@@ -30,7 +30,7 @@ function Featured() {
   return (
     <section className="container mx-auto px-4 py-10">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">⭐Featured Products</h2>
+      <h2 className="text-2xl font-bold text-center">⭐Featured Products</h2>
         <Button variant="outline" className="hover:bg-blue-600 hover:text-white">
           View All
         </Button>

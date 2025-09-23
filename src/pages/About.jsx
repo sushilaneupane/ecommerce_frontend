@@ -1,6 +1,6 @@
 import React from "react";
-import InfoCard from "./InfoCard";
-import ProfileCard from "./ProfileCard";
+import InfoCard from "../components/InfoCard";
+import ProfileCard from "../components/ProfileCard";
 import homeImage4 from "@/assets/homeImage4.jpg";
 import homeImage2 from "@/assets/homeImage2.jpg";
 import homeImage from "@/assets/homeImage.jpg";
@@ -15,7 +15,7 @@ function AboutPage() {
                 <p className="text-lg text-muted-foreground max-w-xl mx-auto">
                     Welcome to our website! We are passionate about delivering high-quality products and services to our users. Our mission is to make your experience seamless and enjoyable.
                 </p>
-                <Button className="mt-4">Learn More</Button>
+                
             </section>
 
             {/* Info Cards Section */}

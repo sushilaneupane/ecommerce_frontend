@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {toast } from "sonner";
+import { ArrowLeft } from "lucide-react";
 
 const ProductOverview = () => {
   const { loggedInUser, token, isAuthenticated } = useAuth();
@@ -56,7 +57,15 @@ const ProductOverview = () => {
   if (isError) return <p className="text-center mt-10">Failed to load product</p>;
 
   return (
-    <div className="flex justify-center p-5 mt-15">
+   <div className="relative flex justify-center p-5 mt-15 w-full">
+  {/* Go Back button fixed to top-left */}
+  <Button
+    onClick={() => window.history.back()}
+    className="absolute top-4 left-4 flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-black hover:bg-white hover:text-black z-10"
+  >
+    <ArrowLeft size={20} />
+  </Button>
+   
       <div className="flex flex-col lg:flex-row lg:gap-1 max-w-6xl w-full">
 
         <Card className="lg:w-1/2 flex flex-col justify-center items-center">

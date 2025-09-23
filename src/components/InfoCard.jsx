@@ -21,10 +21,6 @@ function InfoCard({ title, description, onClick }) {
         <CardDescription className="text-gray-600 dark:text-gray-300 text-sm">
           {description}
         </CardDescription>
-
-        <Button variant="outline" size="sm" className="border-none">
-                 View More
-               </Button>
       </CardContent>
     </Card>
   );

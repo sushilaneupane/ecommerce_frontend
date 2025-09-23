@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-
-
 import { Button } from "@/components/ui/button";
 import { Heart, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useWishlist } from "@/hooks/useWishlist";
+import { ArrowLeft } from "lucide-react";
 
 const Wishlist = () => {
   const { wishlist, isLoading, remove } = useWishlist();
   const [loadingId, setLoadingId] = useState(null);
 
   const safeWishlist = Array.isArray(wishlist) ? wishlist : [];
- 
+
 
   const handleRemove = (wishlistId) => {
     setLoadingId(wishlistId);
@@ -32,6 +31,12 @@ const Wishlist = () => {
 
   return (
     <div className="my-10 px-4 mt-20">
+      <Button
+             onClick={() => window.history.back()}
+             className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-black hover:bg-white hover:text-black"
+           >
+             <ArrowLeft size={20} />
+           </Button>
       <h2 className="text-2xl font-semibold mb-6 text-center">My Wishlist</h2>
 
       {safeWishlist.length === 0 ? (

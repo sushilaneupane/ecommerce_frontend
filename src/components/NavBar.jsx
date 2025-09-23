@@ -66,7 +66,7 @@ function Navbar() {
             </NavigationMenuList>
           </NavigationMenu>
 
-          {/* Icons */}
+          {/* Desktop Icons */}
           <div className="flex items-center gap-4 ml-4">
             <Link to="/cart">
               <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-blue-600 cursor-pointer" />
@@ -78,21 +78,8 @@ function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Button */}
         <div className="flex items-center gap-4 md:hidden">
-          <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-blue-600 cursor-pointer" />
-          <Heart className="h-6 w-6 text-gray-700 hover:text-red-600 cursor-pointer" />
-
-          {isAuthenticated ? (
-            <button onClick={handleLogout} className="text-red-600">
-              Logout
-            </button>
-          ) : (
-            <Link to="/login" className="text-gray-700">
-              Login
-            </Link>
-          )}
-
           <button
             className="p-2"
             onClick={() => setIsOpen(!isOpen)}
@@ -110,6 +97,29 @@ function Navbar() {
             <Link to="/products" className="text-gray-700">Products</Link>
             <Link to="/about" className="text-gray-700">About</Link>
             <Link to="/contact" className="text-gray-700">Contact</Link>
+
+            <div className="flex items-center gap-4 mt-2">
+              <Link to="/cart">
+                <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-blue-600 cursor-pointer" />
+              </Link>
+
+              <Link to="/wishlist">
+                <Heart className="h-6 w-6 text-gray-700 hover:text-red-600 cursor-pointer" />
+              </Link>
+
+              {isAuthenticated ? (
+                <button
+                  onClick={handleLogout}
+                  className="text-red-600 hover:underline"
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link to="/login" className="text-gray-700 hover:underline">
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       )}

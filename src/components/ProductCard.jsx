@@ -35,6 +35,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
+
     <Link to={`/product/${product.id}`} className="w-full">
       <Card className="w-full sm:w-64 cursor-pointer hover:shadow-lg transition-shadow duration-300 p-0 cursor-pointer">
         <img

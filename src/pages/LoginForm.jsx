@@ -62,8 +62,8 @@ export default function LoginForm() {
   };
 
   return (
-    <section className="flex items-center justify-center h-screen bg-gray-50 px-4 bg-gray-200">
-      <Card className="w-full max-w-md bg-white shadow-xl rounded-2xl">
+    <section className="flex items-center justify-center h-screen bg-gray-50 px-4">
+      <Card className="w-full max-w-md bg-white shadow-xl rounded-2xl bg-gray-100">
         <CardHeader className="text-center">
           <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold mt-5">
             Login

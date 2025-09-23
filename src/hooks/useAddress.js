@@ -28,19 +28,22 @@ export const useAddress = (userId, token) => {
   });
 
 
-  const updateMutation = useMutation({
+   const updateMutation = useMutation({
     mutationFn: ({ id, payload }) => updateAddress(id, payload, token),
     onSuccess: () => {
       toast.success("Address updated successfully!");
-      queryClient.invalidateQueries(["userAddress"]);
+      queryClient.invalidateQueries(["userAddress", userId]);
     },
     onError: (error) => {
       toast.error(error?.message || "Failed to update address.");
     },
   });
 
- 
-  const clearCache = () => queryClient.removeQueries(["userAddress"]);
+  const clearCache = () => {
+    queryClient.removeQueries(["userAddress", userId]);
+    createMutation.reset();
+    updateMutation.reset();
+  };
 
   return {
     address,

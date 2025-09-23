@@ -7,6 +7,7 @@ import { useCart } from "../hooks/useCart";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 function ShoppingCart() {
   const navigate = useNavigate();
@@ -78,10 +79,18 @@ function ShoppingCart() {
   if (isError) return <p className="text-center text-red-500">Failed to load cart.</p>;
 
   return (
-    <div className="container mx-auto my-10 px-2 sm:px-4 mt-30">
+    <div className="container mx-auto my-10 px-2 sm:px-4 mt-20">
+      <Button
+        onClick={() => window.history.back()}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-black hover:bg-white hover:text-black"
+      >
+        <ArrowLeft size={20} />
+      </Button>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+
         {/* Cart Items */}
         <Card className="col-span-1 md:col-span-2 p-4 overflow-x-auto">
+
           <CardHeader>
             <CardTitle>Shopping Cart ({cartItems.length} Items)</CardTitle>
           </CardHeader>
@@ -178,7 +187,7 @@ function ShoppingCart() {
 
             <Link
               to="/order"
-              state={{ cartItems }} 
+              state={{ cartItems }}
             >
               <Button
                 className="w-full"

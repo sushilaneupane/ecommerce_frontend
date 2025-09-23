@@ -36,13 +36,14 @@ export const getAddressByUserId = async (userId, token) => {
       }});
     return response.data;
   } catch (error) {
-    console.error("Error fetching categories:", error.message);
-    throw new Error("Failed to fetch categories. Please try again later.");
+    console.error("Error fetching address:", error.message);
+    throw new Error("Failed to fetch address. Please try again later.");
   }
 };
 
   export const updateAddress= async (id, data, token) => {
     try {    
+      console.log(data, "cscbjsckjcl");
       const response = await api.put(`/address/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -50,7 +51,7 @@ export const getAddressByUserId = async (userId, token) => {
       });
       return response.data;
     } catch (error) {
-      console.error("Error creating cart:", error.message);
+      console.error("Error updating address:", error.message);
       throw error.response.data;
     }
   };
