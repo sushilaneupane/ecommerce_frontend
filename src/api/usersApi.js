@@ -11,6 +11,13 @@ export const createUser = async (userData) => {
   
   return response.data;
 };
+export const getUserProfile = async (userId, token) => {
+  const response = await api.get(`/users/${userId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return response.data;
+};
 
 export const loginUser = async (credentials) => {  
   console.log(api, "api");
@@ -20,3 +27,8 @@ export const loginUser = async (credentials) => {
   
   return response.data;
 };
+export const updateUser = async (userId, userData, token) => {
+  const response = await api.put(`/users/${userId}`, userData, {
+    headers: { Authorization: `Bearer ${token}` },
+  }); 
+  return response.data;}

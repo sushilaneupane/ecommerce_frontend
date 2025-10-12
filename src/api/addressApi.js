@@ -31,19 +31,25 @@ export const createAddress = async (data, token) => {
 export const getAddressByUserId = async (userId, token) => {
   try {
     const response = await api.get(`/address/user/${userId}`, {
-         headers: {
+      headers: {
         Authorization: `Bearer ${token}`,
-      }});
-    return response.data;
+      },
+    });
+    return response.data; // address found ✅
   } catch (error) {
+    if (error.response && error.response.status === 404) {
+      console.warn("No address found for this user.");
+      return null; // Return null (not throw) so the UI can handle it gracefully
+    }
     console.error("Error fetching address:", error.message);
     throw new Error("Failed to fetch address. Please try again later.");
   }
 };
 
+
   export const updateAddress= async (id, data, token) => {
     try {    
-      console.log(data, "cscbjsckjcl");
+      
       const response = await api.put(`/address/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,

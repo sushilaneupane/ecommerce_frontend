@@ -9,6 +9,7 @@ import { Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
+
 function ShoppingCart() {
   const navigate = useNavigate();
   const { cartItems, isLoading, isError, remove, update } = useCart();
@@ -80,12 +81,6 @@ function ShoppingCart() {
 
   return (
     <div className="container mx-auto my-10 px-2 sm:px-4 mt-20">
-      <Button
-        onClick={() => window.history.back()}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-black hover:bg-white hover:text-black"
-      >
-        <ArrowLeft size={20} />
-      </Button>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
 
         {/* Cart Items */}
@@ -190,8 +185,8 @@ function ShoppingCart() {
               state={{ cartItems }}
             >
               <Button
-                className="w-full"
-                variant="success"
+                variant="default"
+                className="bg-gray-800  text-white text-sm sm:text-base mt-2 sm:mt-0 w-full sm:w-auto"
                 disabled={cartItems.length === 0}
               >
                 Proceed to Checkout ({cartItems.length})

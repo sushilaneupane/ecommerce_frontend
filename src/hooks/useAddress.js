@@ -5,7 +5,6 @@ import { toast } from "sonner";
 export const useAddress = (userId, token) => {
   const queryClient = useQueryClient();
 
-  // 🟢 Fetch Address
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["userAddress", userId],
     queryFn: () => getAddressByUserId(userId, token),

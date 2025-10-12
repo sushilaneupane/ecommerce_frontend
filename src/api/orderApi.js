@@ -13,3 +13,14 @@ export const getOrders = async (userId, token) => {
     throw error;
   }
 };
+
+  export const createOrder = async (orderData, token) => {
+    const response = await api.post("/orders", orderData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  };

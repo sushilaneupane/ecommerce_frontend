@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useLoginUser } from "@/hooks/useUser.js";
+import { useUser } from "@/hooks/useUser.js";
 
 const loginSchema = z.object({
   email: z
@@ -31,8 +31,9 @@ const loginSchema = z.object({
 
 export default function LoginForm() {
   const navigate = useNavigate();
-  const { mutate: loginUser, isPending } = useLoginUser();
-  const { login } = useAuth();
+  const { login: loginContext } = useAuth(); // auth context
+  const { login } = useUser(); // useUser hook
+  const { mutate: loginUser, isLoading: isPending } = login; // destructure mutation
 
   const {
     register,
@@ -45,12 +46,16 @@ export default function LoginForm() {
   const onSubmit = (data) => {
     loginUser(data, {
       onSuccess: (response) => {
-        if (response?.data?.token) {
-          localStorage.setItem("authToken", response.data.token);
-          localStorage.setItem("user", JSON.stringify(response.data.user));
+        const token = response?.data?.token;
+        const user = response?.data?.user;
+
+        if (token && user) {
+          localStorage.setItem("authToken", token);
+          localStorage.setItem("user", JSON.stringify(user));
+          loginContext(token); // update auth context
           toast.success("Logged in successfully!");
+          navigate("/");
         }
-        navigate("/");
       },
       onError: (error) => {
         toast.error(
@@ -75,6 +80,7 @@ export default function LoginForm() {
 
         <CardContent>
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            {/* Email Field */}
             <div className="space-y-1">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -88,6 +94,7 @@ export default function LoginForm() {
               )}
             </div>
 
+            {/* Password Field */}
             <div className="space-y-1">
               <Label htmlFor="password">Password</Label>
               <Input
@@ -111,6 +118,7 @@ export default function LoginForm() {
               </div>
             </div>
 
+            {/* Submit Button */}
             <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? "Logging in..." : "Login"}
             </Button>

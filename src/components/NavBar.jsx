@@ -1,25 +1,40 @@
-import React, { useState } from "react";
-import { Search, Menu, X, ShoppingCart, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import React, { useState, useEffect } from "react";
+import { Menu, X, ShoppingCart, Heart, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+
+  // close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest(".account-dropdown")) {
+        setIsAccountOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     logout();
     navigate("/login");
+    setIsAccountOpen(false);
+  };
+
+  const handleLinkClick = () => {
+    setIsAccountOpen(false);
   };
 
   return (
@@ -49,20 +64,56 @@ function Navbar() {
                   <Link to="/contact">Contact</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
-              <NavigationMenuItem>
-                {isAuthenticated ? (
-                  <button
-                    onClick={handleLogout}
-                    className="text-red-600 hover:underline"
+
+              {/* Account Dropdown */}
+              {isAuthenticated ? (
+                <div className="relative account-dropdown">
+                  <Button
+                    onClick={() => setIsAccountOpen((prev) => !prev)}
+                    className="flex items-center gap-2 font-medium bg-white text-gray-800 hover:bg-gray-100"
                   >
-                    Logout
-                  </button>
-                ) : (
-                  <NavigationMenuLink asChild>
-                    <Link to="/login">Login</Link>
-                  </NavigationMenuLink>
-                )}
-              </NavigationMenuItem>
+                    {user?.name ? user.name.toUpperCase() : "ACCOUNT"}
+                    <User className="h-5 w-5" />
+                  </Button>
+
+                  {isAccountOpen && (
+                    <div className="absolute right-0 mt-2 w-64 bg-white border rounded-lg shadow-lg py-2 z-50">
+                      <Link
+                        to="/myprofile"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                        onClick={handleLinkClick}
+                      >
+                        Manage My Account
+                      </Link>
+                      <Link
+                        to="/myorders"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                        onClick={handleLinkClick}
+                      >
+                        My Orders
+                      </Link>
+                      <Link
+                        to="/wishlist"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                        onClick={handleLinkClick}
+                      >
+                        My Wishlist & Followed Stores
+                      </Link>
+
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                      >
+                        Log out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <NavigationMenuLink asChild>
+                  <Link to="/login">Login</Link>
+                </NavigationMenuLink>
+              )}
             </NavigationMenuList>
           </NavigationMenu>
 
@@ -71,7 +122,6 @@ function Navbar() {
             <Link to="/cart">
               <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-blue-600 cursor-pointer" />
             </Link>
-
             <Link to="/wishlist">
               <Heart className="h-6 w-6 text-gray-700 hover:text-red-600 cursor-pointer" />
             </Link>
@@ -94,9 +144,15 @@ function Navbar() {
       {isOpen && (
         <div className="md:hidden mt-3 space-y-4 px-4 pb-4 border-t pt-4">
           <div className="flex flex-col space-y-3">
-            <Link to="/products" className="text-gray-700">Products</Link>
-            <Link to="/about" className="text-gray-700">About</Link>
-            <Link to="/contact" className="text-gray-700">Contact</Link>
+            <Link to="/products" className="text-gray-700">
+              Products
+            </Link>
+            <Link to="/about" className="text-gray-700">
+              About
+            </Link>
+            <Link to="/contact" className="text-gray-700">
+              Contact
+            </Link>
 
             <div className="flex items-center gap-4 mt-2">
               <Link to="/cart">

@@ -18,6 +18,10 @@ import ShoppingCart from "./pages/Cart";
 import Product from "./pages/ProductOverview";
 import Featured from "./pages/Featured";
 import CheckoutPage from "./pages/Order";
+import MyOrders from "./pages/MyOrder";
+import MyProfile from "./pages/MyProfile";
+
+
 
 function App() {
   return (
@@ -40,6 +44,9 @@ function App() {
           <Route path="/cart" element={<ShoppingCart />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/order" element={<CheckoutPage/>}/>
+          <Route path="/myorders" element={<MyOrders />} />
+          <Route path="/myprofile" element={<MyProfile />} />
+         
         </Routes>
       </main>
 

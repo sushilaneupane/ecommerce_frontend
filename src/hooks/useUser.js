@@ -1,21 +1,47 @@
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { createUser, loginUser, getUserProfile, updateUser } from "../api/usersApi";
+import { USER_KEY } from "@/utils/queryKeys";
 
-// Axios instance
-const api = axios.create({
-  baseURL: "http://localhost:3001/api",
-});
+export function useUser() {
+  const queryClient = useQueryClient();
+  const token = localStorage.getItem("authToken");
+  const user = JSON.parse(localStorage.getItem("user"));
 
-import { createUser, loginUser } from "../api/usersApi";
-
-export const useCreateUser = () => {
-  return useMutation({
-    mutationFn: createUser,
+  // Fetch user profile
+  const { data: userProfile, isLoading, isError } = useQuery({
+    queryKey: [USER_KEY, user?.id],
+    queryFn: () => getUserProfile(user?.id, token),
+    enabled: !!user?.id && !!token,
   });
-};
 
-export const useLoginUser = () => {
-  return useMutation({
+  // Create user mutation
+  const create = useMutation({
+    mutationFn: createUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries([USER_KEY]);
+    },
+  });
+
+  const login = useMutation({
     mutationFn: loginUser,
   });
-};
+
+  const update = useMutation({
+    mutationFn: ({ id, payload }) => updateUser(id, payload, token),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries(["user", id]);
+    },
+    onError: (error) => {
+      console.error("Failed to update user:", error?.message || error);
+    },
+  });
+
+  return {
+    userProfile,
+    isLoading,
+    isError,
+    create,
+    login,
+    update,
+  };
+}
