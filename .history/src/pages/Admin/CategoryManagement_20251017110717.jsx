@@ -11,32 +11,21 @@ export default function CategoryManagement() {
     isError,
     create,
     update,
-    remove,
   } = useCategories();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
+  // 🟢 Open dialog in "Add" mode
   const handleAdd = () => {
     setSelectedCategory(null);
     setDialogOpen(true);
   };
 
-
+  // 🟢 Open dialog in "Edit" mode with existing data
   const handleEdit = (category) => {
     setSelectedCategory(category);
     setDialogOpen(true);
-  };
-
-  const handleDelete = async (categoryId) => {
-    try {
-      await remove.mutateAsync(categoryId);
-      toast.success("Category deleted successfully!");
-    } catch (err) {
-      toast.error(
-        err?.response?.data?.message || "Failed to delete category"
-      );
-    }
   };
 
   const handleSubmit = async (data) => {
@@ -76,8 +65,7 @@ export default function CategoryManagement() {
         isError={isError}
         onAdd={handleAdd}
         onEdit={handleEdit}
-        onDelete={handleDelete}
-       
+        // you can also add onDelete later
       />
 
       <CategoryDialog

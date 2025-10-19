@@ -42,17 +42,3 @@ export const updateCategory = async (categoryId, categoryData, token) => {
     throw error;
   }
 };
-
-export const deleteCategory = async (categoryId, token) => {
-  try {
-    const response = await api.delete(`/categories/${categoryId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error deleting category:", error.response?.data || error.message);
-    throw error;
-  }
-};

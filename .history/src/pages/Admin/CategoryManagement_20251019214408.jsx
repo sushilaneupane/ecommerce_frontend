@@ -11,7 +11,6 @@ export default function CategoryManagement() {
     isError,
     create,
     update,
-    remove,
   } = useCategories();
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -27,7 +26,6 @@ export default function CategoryManagement() {
     setSelectedCategory(category);
     setDialogOpen(true);
   };
-
   const handleDelete = async (categoryId) => {
     try {
       await remove.mutateAsync(categoryId);
@@ -37,7 +35,6 @@ export default function CategoryManagement() {
         err?.response?.data?.message || "Failed to delete category"
       );
     }
-  };
 
   const handleSubmit = async (data) => {
     try {

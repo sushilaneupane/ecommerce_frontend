@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCategories } from "../hooks/useCategories";
+import { useCategories } from "@/hooks/useCategories";
 import { toast } from "sonner";
 
 const categorySchema = z.object({
@@ -23,7 +23,7 @@ const categorySchema = z.object({
 });
 
 export default function CategoryDialog({ open, setOpen, initialData = null }) {
-  const { create, update, remove } = useCategories();
+  const { create, update } = useCategories();
 
   const {
     register,
@@ -36,63 +36,50 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
     defaultValues: { name: "", description: "" },
   });
 
-  // 🟢 Prefill form if editing
+  // ✅ Fill form fields in edit mode
   useEffect(() => {
     if (initialData) {
-      setValue("name", initialData.name);
-      setValue("description", initialData.description);
+      reset({
+        name: initialData.name || "",
+        description: initialData.description || "",
+      });
     } else {
-      reset();
+      reset({ name: "", description: "" });
     }
-  }, [initialData, reset, setValue]);
+  }, [initialData, reset]);
 
-  // 🟢 Handle Create / Update
+  // ✅ Handle create or update
   const handleFormSubmit = async (data) => {
     try {
       if (initialData) {
+        // 🔹 Update category
         await update.mutateAsync({
-          categoryId: initialData.id,
+          categoryId: initialData._id,
           categoryData: data,
         });
         toast.success("Category updated successfully!");
       } else {
+        // 🔹 Create new category
         await create.mutateAsync(data);
         toast.success("Category created successfully!");
       }
+
       reset();
       setOpen(false);
     } catch (error) {
-      toast.error(initialData ? "Failed to update category" : "Failed to create category");
-      console.error("Error saving category:", error);
+      toast.error("Something went wrong while saving the category!");
+      console.error("Category error:", error);
     }
   };
-
-  const handleDelete = async (categoryId) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this category?");
-    if (!confirmDelete) return;
-
-    try {
-      await remove.mutateAsync(categoryId);
-      toast.success("Category deleted successfully!");
-      setOpen(false);  // ✅ Close dialog
-      reset();         // ✅ Reset form
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to delete category");
-      console.error("Error deleting category:", err);
-    }
-  };
-
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>
-            {initialData ? "Edit Category" : "Add Category"}
-          </DialogTitle>
+          <DialogTitle>{initialData ? "Edit Category" : "Add Category"}</DialogTitle>
           <DialogDescription>
             {initialData
-              ? "Update or delete the category details below."
+              ? "Update the category details below."
               : "Enter details for the new category below."}
           </DialogDescription>
         </DialogHeader>
@@ -119,25 +106,10 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
             )}
           </div>
 
-          <DialogFooter className="flex justify-between">
-            <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
-
-              {initialData && (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => handleDelete(initialData.id)} 
-                  disabled={remove.isPending}
-                >
-                  {remove.isPending ? "Deleting..." : "Delete"}
-                </Button>
-
-              )}
-            </div>
-
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
             <Button
               type="submit"
               disabled={create.isPending || update.isPending}
@@ -145,8 +117,8 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
               {create.isPending || update.isPending
                 ? "Saving..."
                 : initialData
-                  ? "Update"
-                  : "Save"}
+                ? "Update"
+                : "Save"}
             </Button>
           </DialogFooter>
         </form>

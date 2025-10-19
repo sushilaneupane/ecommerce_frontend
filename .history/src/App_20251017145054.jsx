@@ -24,6 +24,8 @@ import CheckoutPage from "./pages/Checkout";
 import MyOrders from "./pages/MyOrder";
 import MyProfile from "./pages/MyProfile";
 import ProductTable from "./pages/admin/ProductManagement"
+
+// Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CategoryManagement from "./pages/admin/CategoryManagement";
 

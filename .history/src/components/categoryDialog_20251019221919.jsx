@@ -67,21 +67,24 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
     }
   };
 
-  const handleDelete = async (categoryId) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this category?");
+  // 🗑️ Handle Delete Category
+  const handleDelete = async () => {
+    if (!initialData?.id) return;
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${initialData.name}"?`
+    );
     if (!confirmDelete) return;
 
     try {
-      await remove.mutateAsync(categoryId);
+      await remove.mutateAsync(initialData.id);
       toast.success("Category deleted successfully!");
-      setOpen(false);  // ✅ Close dialog
-      reset();         // ✅ Reset form
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to delete category");
-      console.error("Error deleting category:", err);
+      setOpen(false);
+      reset();
+    } catch (error) {
+      toast.error("Failed to delete category");
+      console.error("Error deleting category:", error);
     }
   };
-
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -129,12 +132,11 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
                 <Button
                   type="button"
                   variant="destructive"
-                  onClick={() => handleDelete(initialData.id)} 
+                  onClick={() => handleDelete(initialData.id)}
                   disabled={remove.isPending}
                 >
                   {remove.isPending ? "Deleting..." : "Delete"}
                 </Button>
-
               )}
             </div>
 

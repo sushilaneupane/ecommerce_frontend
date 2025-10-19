@@ -55,4 +55,3 @@ export const deleteCategory = async (categoryId, token) => {
     console.error("Error deleting category:", error.response?.data || error.message);
     throw error;
   }
-};

@@ -9,11 +9,19 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Edit, Trash, Search } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
+import { Edit, Search } from "lucide-react";
 
-export default function CategoryTable({ categories = [], onEdit, onDelete, onAdd }) {
+export default function CategoryTable({ categories = [], isLoading, isError, onAdd, onEdit }) {
   const [query, setQuery] = useState("");
+
+  if (isLoading) return <div>Loading categories...</div>;
+  if (isError) return <div>Error loading categories!</div>;
 
   const filtered = categories.filter(
     (cat) =>
@@ -27,7 +35,7 @@ export default function CategoryTable({ categories = [], onEdit, onDelete, onAdd
         <CardTitle>Categories</CardTitle>
 
         <div className="flex w-full sm:w-auto gap-2">
-          {/* 🔍 Search Input */}
+          {/* Search Input */}
           <div className="relative flex-1 sm:flex-none">
             <Input
               placeholder="Search by name or description..."
@@ -41,13 +49,12 @@ export default function CategoryTable({ categories = [], onEdit, onDelete, onAdd
             />
           </div>
 
-          {/* ➕ Add Category Button */}
+          {/* Add Category Button */}
           <Button onClick={onAdd}>Add Category</Button>
         </div>
       </CardHeader>
 
       <CardContent>
-        {/* 🧾 Scrollable Table */}
         <div className="max-h-[550px] overflow-y-auto">
           <Table className="min-w-full table-auto">
             <TableHeader>
@@ -71,18 +78,9 @@ export default function CategoryTable({ categories = [], onEdit, onDelete, onAdd
                     <TableCell>{idx + 1}</TableCell>
                     <TableCell>{cat.name}</TableCell>
                     <TableCell className="whitespace-normal">{cat.description}</TableCell>
-                    <TableCell className="text-right flex justify-end gap-2">
+                    <TableCell className="text-right">
                       <Button size="sm" variant="outline" onClick={() => onEdit(cat)}>
                         <Edit size={16} />
-                      </Button>
-
-                      {/* 🧹 FIXED: send only cat.id */}
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => onDelete(cat.id)}
-                      >
-                        <Trash size={16} />
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -92,7 +90,6 @@ export default function CategoryTable({ categories = [], onEdit, onDelete, onAdd
           </Table>
         </div>
 
-        {/* Footer Info */}
         <div className="flex justify-between items-center mt-4 text-sm text-muted-foreground">
           <div>
             Showing {filtered.length} of {categories.length} categories

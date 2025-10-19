@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchCategories, createCategory, updateCategory, deleteCategory} from "../api/categoryApi"; 
+import { fetchCategories, createCategory, updateCategory} from "../api/categoryApi"; 
 import { CATEGORY_KEY } from "@/utils/queryKeys";
 
 export function useCategories() {
@@ -33,16 +33,7 @@ export function useCategories() {
       console.error(error?.response?.data?.message || "Failed to update category");
     },
   });
-
-  const remove = useMutation({
-    mutationFn: (categoryId) => deleteCategory(categoryId, token),
-    onSuccess: () => {
-      queryClient.invalidateQueries([CATEGORY_KEY]);
-    },
-    onError: (error) => {
-      console.error(error?.response?.data?.message || "Failed to delete category");
-    },
-  }); 
+  
 
   return {
     categories,
@@ -50,7 +41,6 @@ export function useCategories() {
     isError,
     create,
     update,
-    remove
     
   };
 }

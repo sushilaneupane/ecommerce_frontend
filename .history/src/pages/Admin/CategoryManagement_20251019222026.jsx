@@ -11,7 +11,7 @@ export default function CategoryManagement() {
     isError,
     create,
     update,
-    remove,
+    remove
   } = useCategories();
 
   const [dialogOpen, setDialogOpen] = useState(false);

@@ -28,16 +28,20 @@ export default function CategoryManagement() {
     setDialogOpen(true);
   };
 
-  const handleDelete = async (categoryId) => {
-    try {
-      await remove.mutateAsync(categoryId);
-      toast.success("Category deleted successfully!");
-    } catch (err) {
-      toast.error(
-        err?.response?.data?.message || "Failed to delete category"
-      );
-    }
-  };
+ const handleDelete = async (categoryId) => {
+  const confirmDelete = window.confirm("Are you sure you want to delete this category?");
+  if (!confirmDelete) return;
+
+  try {
+    await remove.mutateAsync(categoryId);
+    toast.success("Category deleted successfully!");
+    setOpen(false);  // ✅ Close dialog
+    reset();         // ✅ Reset form
+  } catch (err) {
+    toast.error(err?.response?.data?.message || "Failed to delete category");
+    console.error("Error deleting category:", err);
+  }
+};
 
   const handleSubmit = async (data) => {
     try {

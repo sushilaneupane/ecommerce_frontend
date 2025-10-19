@@ -129,12 +129,11 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
                 <Button
                   type="button"
                   variant="destructive"
-                  onClick={() => handleDelete(initialData.id)} 
+                  onClick={() => handleDelete(initialData.id)}
                   disabled={remove.isPending}
                 >
                   {remove.isPending ? "Deleting..." : "Delete"}
                 </Button>
-
               )}
             </div>
 

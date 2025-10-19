@@ -23,7 +23,7 @@ const categorySchema = z.object({
 });
 
 export default function CategoryDialog({ open, setOpen, initialData = null }) {
-  const { create, update, remove } = useCategories();
+  const { create, update } = useCategories();
 
   const {
     register,
@@ -46,7 +46,6 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
     }
   }, [initialData, reset, setValue]);
 
-  // 🟢 Handle Create / Update
   const handleFormSubmit = async (data) => {
     try {
       if (initialData) {
@@ -56,9 +55,11 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
         });
         toast.success("Category updated successfully!");
       } else {
+        // CREATE new category
         await create.mutateAsync(data);
         toast.success("Category created successfully!");
       }
+
       reset();
       setOpen(false);
     } catch (error) {
@@ -66,22 +67,6 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
       console.error("Error saving category:", error);
     }
   };
-
-  const handleDelete = async (categoryId) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this category?");
-    if (!confirmDelete) return;
-
-    try {
-      await remove.mutateAsync(categoryId);
-      toast.success("Category deleted successfully!");
-      setOpen(false);  // ✅ Close dialog
-      reset();         // ✅ Reset form
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to delete category");
-      console.error("Error deleting category:", err);
-    }
-  };
-
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -92,7 +77,7 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
           </DialogTitle>
           <DialogDescription>
             {initialData
-              ? "Update or delete the category details below."
+              ? "Update the category details below."
               : "Enter details for the new category below."}
           </DialogDescription>
         </DialogHeader>
@@ -119,25 +104,10 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
             )}
           </div>
 
-          <DialogFooter className="flex justify-between">
-            <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
-
-              {initialData && (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => handleDelete(initialData.id)} 
-                  disabled={remove.isPending}
-                >
-                  {remove.isPending ? "Deleting..." : "Delete"}
-                </Button>
-
-              )}
-            </div>
-
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
             <Button
               type="submit"
               disabled={create.isPending || update.isPending}
@@ -145,8 +115,8 @@ export default function CategoryDialog({ open, setOpen, initialData = null }) {
               {create.isPending || update.isPending
                 ? "Saving..."
                 : initialData
-                  ? "Update"
-                  : "Save"}
+                ? "Update"
+                : "Save"}
             </Button>
           </DialogFooter>
         </form>
