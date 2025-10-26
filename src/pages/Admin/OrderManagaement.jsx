@@ -13,19 +13,19 @@ export default function OrderManagement() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState("");
 
-  const { orders = [], isLoading, isError, error } = useOrders();
+  const { allOrders = [], isErrorAll, isLoadingAll, errorAll, update } = useOrders();
+
   const filteredOrders = filterStatus
-    ? orders.filter((order) => order.status === filterStatus)
-    : orders;
+    ? allOrders.filter((order) => order.orderStatus === filterStatus)
+    : allOrders;
 
-  if (isLoading) {
-    return <div className="p-6">Loading orders...</div>;
-  }
+  const handleUpdate = (orderId, newStatus) => {
+    update({ orderId, orderStatus: newStatus });
+    setDialogOpen(false);
+  };
 
-  if (isError) {
-    return <div className="p-6 text-red-500">Error loading orders: {error.message}</div>;
-  }
-
+  if (isLoadingAll) return <div className="p-6">Loading orders...</div>;
+  if (isErrorAll) return <div className="p-6 text-red-500">Error loading orders: {errorAll.message}</div>;
 
   return (
     <div className="p-6 space-y-6">
@@ -43,13 +43,13 @@ export default function OrderManagement() {
               <SelectValue placeholder="Filter by Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Pending">Pending</SelectItem>
-              <SelectItem value="Processing">Processing</SelectItem>
-              <SelectItem value="Completed">Completed</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="processing">Processing</SelectItem>
+              <SelectItem value="shipped">Shipped</SelectItem>
+              <SelectItem value="delivered">Delivered</SelectItem>
+              <SelectItem value="cancelled">Cancelled</SelectItem>
             </SelectContent>
           </Select>
-
-          <Button className="w-full md:w-auto">Add New Order</Button>
         </CardContent>
       </Card>
 
@@ -58,11 +58,24 @@ export default function OrderManagement() {
           <CardTitle>Orders</CardTitle>
         </CardHeader>
         <CardContent>
-          <OrderTable orders={filteredOrders} onView={(order) => { setSelectedOrder(order); setDialogOpen(true); }} />
+          <OrderTable
+            orders={filteredOrders}
+            onView={(order) => {
+              setSelectedOrder(order);
+              setDialogOpen(true);
+            }}
+          />
         </CardContent>
       </Card>
 
-      <OrderDialog open={dialogOpen} onClose={() => setDialogOpen(false)} order={selectedOrder} />
+      {selectedOrder && (
+        <OrderDialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          order={selectedOrder}
+          onUpdate={handleUpdate}
+        />
+      )}
     </div>
   );
 }

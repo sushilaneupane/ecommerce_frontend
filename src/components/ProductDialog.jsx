@@ -22,7 +22,6 @@ const productSchema = z.object({
   categoryId: z.string().min(1, "Category is required"),
   price: z
     .string()
-    .min(1, "Price is required")
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
       message: "Price must be a positive number",
     }),
@@ -51,49 +50,80 @@ export default function ProductDialog({ open, setOpen, initialData = null, onSub
 
   const [previewImages, setPreviewImages] = useState([]);
   const [files, setFiles] = useState([]);
+  const [existingImages, setExistingImages] = useState([]);
 
   useEffect(() => {
     if (initialData) {
       setValue("name", initialData.productName);
       setValue("price", initialData.price);
       setValue("description", initialData.description || "");
-
-
-      const matchedCategory = categories.find(
-        (cat) => cat.name === initialData.categoryName
-      );
-      setValue("categoryId", matchedCategory?.id?.toString() || "");
-
-      if (initialData.images?.length > 0) {
-        setPreviewImages(
-          initialData.images.map((img) => `http://localhost:3001/uploads/${img.image}`)
+      if (categories.length > 0) {
+        const matchedCategory = categories.find(
+          (cat) => cat.name === initialData.categoryName
         );
+        setValue("categoryId", matchedCategory?.id?.toString() || "");
+      }
+    
+    if (initialData.images && initialData.images.length > 0) {
+      setExistingImages(initialData.images);
+
+      const urls = initialData.images.map((img) => {
+        const filename = typeof img === "string" ? img : img.image;
+        return `${import.meta.env.VITE_IMAGE_BASEURL}/${filename}`;
+      });
+
+      setPreviewImages(urls);
+      } else {
+        setPreviewImages([]);
+        setExistingImages([]);
       }
     } else {
       reset();
       setPreviewImages([]);
       setFiles([]);
+      setExistingImages([]);
     }
   }, [initialData, categories, reset, setValue]);
 
+  const handleImagesChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    setFiles((prev) => [...prev, ...selectedFiles]);
+    setPreviewImages((prev) => [
+      ...prev,
+      ...selectedFiles.map((file) => URL.createObjectURL(file)),
+    ]);
+  };
+
+  const handleRemoveImage = (index) => {
+    if (index < existingImages.length) {
+      setExistingImages((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      const fileIndex = index - existingImages.length;
+      setFiles((prev) => prev.filter((_, i) => i !== fileIndex));
+    }
+    setPreviewImages((prev) => prev.filter((_, i) => i !== index));
+  };
   const handleFormSubmit = (data) => {
-    const formattedData = {
-      name: data.name,
-      categoryId: Number(data.categoryId),
-      price: Number(data.price),
-      description: data.description || "",
-      files: files,
-    };
-    create.mutate(formattedData);
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("price", data.price);
+    formData.append("description", data.description || "");
+    formData.append("categoryId", data.categoryId);
+
+    formData.append(
+      "existingImages",
+      JSON.stringify(existingImages.map((img) => img.image))
+    );
+
+    files.forEach((file) => formData.append("files", file));
+
+    onSubmit(formData);
+
     reset();
     setPreviewImages([]);
     setFiles([]);
+    setExistingImages([]);
     setOpen(false);
-  };
-  const handleImagesChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    setFiles(selectedFiles);
-    setPreviewImages(selectedFiles.map((file) => URL.createObjectURL(file)));
   };
 
   return (
@@ -107,20 +137,15 @@ export default function ProductDialog({ open, setOpen, initialData = null, onSub
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 mt-2">
-
           <div className="space-y-2">
             <Label>Product Name</Label>
             <Input {...register("name")} placeholder="Enter product name" />
             {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
           </div>
 
-
           <div className="space-y-2">
             <Label>Category</Label>
-            <select
-              {...register("categoryId")}
-              className="w-full border rounded px-3 py-2 bg-white text-gray-700"
-            >
+            <select {...register("categoryId")} className="w-full border rounded px-3 py-2">
               <option value="">-- Select Category --</option>
               {!isLoading &&
                 categories?.map((cat) => (
@@ -129,11 +154,8 @@ export default function ProductDialog({ open, setOpen, initialData = null, onSub
                   </option>
                 ))}
             </select>
-            {errors.categoryId && (
-              <p className="text-red-500 text-sm">{errors.categoryId.message}</p>
-            )}
+            {errors.categoryId && <p className="text-red-500 text-sm">{errors.categoryId.message}</p>}
           </div>
-
 
           <div className="space-y-2">
             <Label>Price (Rs)</Label>
@@ -141,24 +163,26 @@ export default function ProductDialog({ open, setOpen, initialData = null, onSub
             {errors.price && <p className="text-red-500 text-sm">{errors.price.message}</p>}
           </div>
 
-
           <div className="space-y-2">
             <Label>Description</Label>
             <Textarea {...register("description")} placeholder="Product description" />
           </div>
-
 
           <div className="space-y-2">
             <Label>Upload Images</Label>
             <Input type="file" accept="image/*" multiple onChange={handleImagesChange} />
             <div className="flex flex-wrap gap-2 mt-2">
               {previewImages.map((src, idx) => (
-                <img
-                  key={idx}
-                  src={src}
-                  alt="Preview"
-                  className="w-24 h-24 object-cover rounded border"
-                />
+                <div key={idx} className="relative">
+                  <img src={src} alt="Preview" className="w-24 h-24 object-cover rounded border" />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(idx)}
+                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                  >
+                    &times;
+                  </button>
+                </div>
               ))}
             </div>
           </div>

@@ -13,6 +13,9 @@ export default function ProductManagement() {
     setDialogOpen(true);
   };
 
+  console.log(selectedProduct, "selected product");
+  
+
   const handleEdit = (product) => {
     setSelectedProduct(product);
     setDialogOpen(true);
@@ -26,6 +29,7 @@ export default function ProductManagement() {
 
   const handleSubmit = (formData) => {
     if (selectedProduct) {
+      console.log(selectedProduct.id, "productId");
       update.mutate({ id: selectedProduct.id, data: formData });
     } else {
       create.mutate(formData);

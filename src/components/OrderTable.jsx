@@ -8,7 +8,7 @@ export default function OrderTable({ orders, onView }) {
       <TableHeader>
         <TableRow>
           <TableHead>Order ID</TableHead>
-          <TableHead>User ID</TableHead>
+          <TableHead>User Name</TableHead>
           <TableHead>Date</TableHead>
           <TableHead>Amount</TableHead>
           <TableHead>Status</TableHead>
@@ -17,11 +17,11 @@ export default function OrderTable({ orders, onView }) {
       </TableHeader>
       <TableBody>
         {orders.map((order) => (
-          <TableRow key={order.orderId}>
-            <TableCell>{order.orderId}</TableCell>
-            <TableCell>{order.userId}</TableCell>
+          <TableRow key={order.id}>
+            <TableCell>{order.id}</TableCell>
+            <TableCell>{order.firstName} {order.lastName}</TableCell>
             <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
-            <TableCell>${order.totalAmount}</TableCell>
+            <TableCell>Rs{order.totalAmount}</TableCell>
             <TableCell>{order.orderStatus}</TableCell>
             <TableCell>
               <Button size="sm" variant="outline" onClick={() => onView(order)}>

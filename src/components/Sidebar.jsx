@@ -19,7 +19,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-64 bg-white border-r shadow-md p-5 flex flex-col justify-between">
+    <aside className="w-64 bg-white border-r shadow-md p-5 flex flex-col justify-between h-screen">
       <div>
         <h2 className="text-2xl font-bold mb-8 text-blue-600">Admin Panel</h2>
 

@@ -24,28 +24,13 @@ export const fetchProductById = async (id) => {
   }
 };
 
-
-export const createProduct = async (product, token) => {
-  const formData = new FormData();
-
-  formData.append("name", product.name);
-  formData.append("description", product.description || "");
-  formData.append("price", product.price);
-  formData.append("categoryId", product.categoryId);
-
-  if (product.files && product.files.length > 0) {
-    product.files.forEach((file) => {
-      formData.append("images", file);
-    });
-  }
-
+export const createProduct = async (formData, token) => {
   return axios.post(`${import.meta.env.VITE_BASEURL}/products`, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 };
-
 
 export const updateProduct = async (productId, productData, token) => {
   try {
@@ -60,6 +45,7 @@ export const updateProduct = async (productId, productData, token) => {
     throw error;
   }
 };
+
 
 export const deleteProduct = async (productId, token) => {
   console.log("Deleting product with ID:", productId);

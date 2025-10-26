@@ -1,86 +1,55 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 
-export default function OrderDialog({ open, onClose, order }) {
-  if (!order) return null;
+export default function OrderDialog({ open, onClose, order, onUpdate }) {
+  const [status, setStatus] = useState("");
+
+  useEffect(() => {
+    setStatus(order?.orderStatus || "");
+  }, [order]);
+
+  const handleUpdate = async (id) => {
+    await onUpdate(id, status);
+    onClose();
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent
-         className="fixed top-1/2 left-1/2 h-auto max-h-[90vh] w-full max-w-md p-6 rounded-lg shadow-xl overflow-y-auto bg-white transform -translate-x-1/2 -translate-y-1/2 border"
-      >
-        <DialogHeader className="p-4 border-b">
-          <DialogTitle className="text-xl font-semibold">Order Details</DialogTitle>
-          <DialogDescription>View full order summary and information.</DialogDescription>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Order Details</DialogTitle>
         </DialogHeader>
 
-        <div className="p-4 space-y-4 text-sm">
-          <div className="flex justify-between">
-            <span className="font-medium">Order ID:</span>
-            <span>{order.orderId}</span>
+        <div className="space-y-4">
+          <div className="flex justify-between"><span>Order ID:</span><span>{order.id}</span></div>
+          <div className="flex justify-between"><span>User Name:</span><span>{order.firstName} {order.lastName}</span></div>
+          <div className="flex justify-between"><span>Total Amount:</span><span>Rs {order.totalAmount}</span></div>
+          <div className="flex justify-between"><span>Shipping Cost:</span><span>Rs {order.shippingCost}</span></div>
+          <div className="flex justify-between"><span>Order Date:</span><span>{new Date(order.createdAt).toLocaleString()}</span></div>
+
+          <div className="space-y-2">
+            <Label>Status</Label>
+            <Select value={status} onValueChange={setStatus}>
+              <SelectTrigger><SelectValue placeholder="Select Status" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="processing">processing</SelectItem>
+                <SelectItem value="shipped">shipped</SelectItem>
+                <SelectItem value="delivered">delivered</SelectItem>
+                <SelectItem value="cancelled">cancelled</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-
-          <div className="flex justify-between">
-            <span className="font-medium">User ID:</span>
-            <span>{order.userId}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span className="font-medium">Date:</span>
-            <span>{new Date(order.createdAt).toLocaleString()}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span className="font-medium">Amount:</span>
-            <span>${order.totalAmount}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span className="font-medium">Status:</span>
-            <span className="px-2 py-1 rounded bg-gray-100 text-gray-700 text-xs font-medium">
-              {order.orderStatus}
-            </span>
-          </div>
-
-          {order.products && order.products.length > 0 && (
-            <div>
-              <h3 className="font-medium mt-4 mb-2">Products:</h3>
-              <ul className="space-y-1">
-                {order.products.map((p, index) => (
-                  <li key={index} className="flex justify-between">
-                    <span>{p.productName || "N/A"}</span>
-                    <span>{p.quantity ? `x${p.quantity}` : ""}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {order.payments && order.payments.length > 0 && (
-            <div>
-              <h3 className="font-medium mt-4 mb-2">Payments:</h3>
-              <ul className="space-y-1 text-sm">
-                {order.payments.map((p, index) => (
-                  <li key={index} className="flex justify-between">
-                    <span>{p.paymentMethod}</span>
-                    <span>${p.amount} - {p.paymentStatus}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
-
-        <div className="border-t p-4 flex justify-end">
-          <Button variant="secondary" onClick={onClose}>Close</Button>
-        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Close</Button>
+          <Button onClick={() => handleUpdate(order.id)}>Update Status</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

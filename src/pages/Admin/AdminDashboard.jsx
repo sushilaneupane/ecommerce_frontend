@@ -8,8 +8,9 @@ export default function Dashboard() {
         <CardHeader>
           <CardTitle>Admin Dashboard Overview</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="h-screen bg-purple-50 flex items-center justify-center">
           <p>Welcome to your admin panel. Use the sidebar to manage products, categories, and more.</p>
+
         </CardContent>
       </Card>
     </div>
