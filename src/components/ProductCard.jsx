@@ -49,7 +49,7 @@ const ProductCard = ({ product }) => {
         />
 
 
-        {/* Content below the image */}
+       
         <CardContent className="p-3">
           <CardHeader className="p-0 mb-2">
             <CardTitle className="text-base line-clamp-1">
@@ -60,7 +60,7 @@ const ProductCard = ({ product }) => {
             </CardDescription>
           </CardHeader>
 
-          {/* Price and Favourites button */}
+         
           <div className="mt-2 flex items-center justify-between">
             <span className="font-bold text-sm">
               {product?.price ? `Rs ${product.price}` : "N/A"}

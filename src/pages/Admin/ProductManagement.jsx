@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ProductDialog from "../../components/ProductDialog";
 import ProductTable from "../../components/ProductTable";
 import { useProducts } from "../../hooks/useProducts";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ProductManagement() {
   const { productsData, isLoading, isError, create, update, remove } = useProducts();
@@ -12,9 +13,6 @@ export default function ProductManagement() {
     setSelectedProduct(null);
     setDialogOpen(true);
   };
-
-  console.log(selectedProduct, "selected product");
-  
 
   const handleEdit = (product) => {
     setSelectedProduct(product);

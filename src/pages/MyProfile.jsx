@@ -18,7 +18,7 @@ export default function MyProfile() {
   const [editData, setEditData] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Set initial state when userProfile is loaded
+  
   useEffect(() => {
     if (userProfile) {
       setEditData({
@@ -32,7 +32,7 @@ export default function MyProfile() {
     }
   }, [userProfile]);
 
-  // Close dialog on successful update
+ 
   useEffect(() => {
     if (update.isSuccess) {
       setIsDialogOpen(false);

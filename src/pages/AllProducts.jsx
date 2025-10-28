@@ -80,7 +80,7 @@ function AllProducts() {
   return (
     <div className="container mx-auto px-4 py-8 mt-9">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {/* Sidebar */}
+      
         <aside className="col-span-1 bg-gray-50 p-4 rounded-lg shadow flex flex-col">
           <div className="flex justify-end mb-4">
             <Button
@@ -97,7 +97,7 @@ function AllProducts() {
 
           {showCategories && (
             <>
-              {/* Search Box */}
+           
               <div className="flex gap-2 mb-6">
                 <Input
                   type="text"
@@ -111,7 +111,7 @@ function AllProducts() {
                 </Button>
               </div>
 
-              {/* Categories */}
+            
               <h2 className="text-xl font-semibold mb-3">Categories</h2>
               {isCategoriesLoading && <p>Loading categories...</p>}
               {isCategoriesError && (
@@ -144,7 +144,7 @@ function AllProducts() {
           )}
         </aside>
 
-        {/* Main Content */}
+      
         <main className={showCategories ? "md:col-span-3" : "md:col-span-4"}>
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
             <h3 className="text-2xl font-semibold">

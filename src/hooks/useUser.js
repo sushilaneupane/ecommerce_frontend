@@ -7,14 +7,14 @@ export function useUser() {
   const token = localStorage.getItem("authToken");
   const user = JSON.parse(localStorage.getItem("user"));
 
-  // Fetch user profile
+ 
   const { data: userProfile, isLoading, isError } = useQuery({
     queryKey: [USER_KEY, user?.id],
     queryFn: () => getUserProfile(user?.id, token),
     enabled: !!user?.id && !!token,
   });
 
-  // Create user mutation
+  
   const create = useMutation({
     mutationFn: createUser,
     onSuccess: () => {

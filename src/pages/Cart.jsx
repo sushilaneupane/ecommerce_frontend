@@ -14,7 +14,7 @@ function ShoppingCart() {
   const [loadingId, setLoadingId] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
 
-  // ✅ Remove cart item
+
   const handleRemove = (cartId) => {
     setLoadingId(cartId);
     remove.mutate(
@@ -32,7 +32,7 @@ function ShoppingCart() {
     );
   };
 
-  // ✅ Update cart item quantity
+ 
   const handleUpdateCart = (cartItemId, newQuantity, userId, productId) => {
     if (newQuantity < 1) return;
     setUpdatingId(cartItemId);

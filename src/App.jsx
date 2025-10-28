@@ -28,6 +28,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import CategoryManagement from "./pages/admin/CategoryManagement";
 import ProductManagement from "./pages/admin/ProductManagement";
 import OrderManagementPage from "./pages/Admin/OrderManagaement"; 
+import PaymentManagement from "./pages/Admin/PaymentManagement";
 
 function App() {
   const { user } = useAuth();
@@ -66,6 +67,8 @@ function App() {
         <Route path="categories" element={<CategoryManagement />} />
         <Route path="products" element={<ProductManagement/>} />
         <Route path="orders" element={<OrderManagementPage />} />
+        <Route path="payments" element={<PaymentManagement />} /> 
+        
       </Route>
     </Routes>
   );

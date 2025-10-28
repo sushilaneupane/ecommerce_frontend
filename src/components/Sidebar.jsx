@@ -10,6 +10,7 @@ export default function Sidebar() {
     { path: "/admin/dashboard/categories", label: "Categories", icon: Tags },
     { path: "/admin/dashboard/products", label: "Products", icon: ShoppingBag },
     { path: "/admin/dashboard/orders", label: "Orders", icon: ShoppingBag },
+    { path: "/admin/dashboard/payments", label: "Payments", icon: ShoppingBag },
   ];
 
   const handleLogout = () => {

@@ -195,7 +195,8 @@ function Navbar() {
                   <div className="mt-2 w-full bg-white border rounded-lg shadow-lg py-2 z-50 flex flex-col">
                     <Link
                       to="/myprofile"
-                      className="block px-4 py-2 hover:bg-gray-100"
+                      className="flex items-center gap-2 mt-2 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2"
+
                       onClick={handleLinkClick}
                     >
                       Manage My Account

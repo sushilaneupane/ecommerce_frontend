@@ -7,7 +7,7 @@ import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/context/AuthContext";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import {toast } from "sonner";
+import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 
 const ProductOverview = () => {
@@ -17,9 +17,9 @@ const ProductOverview = () => {
   const { product, isLoading, isError } = useProductById(id);
   const { create } = useCart(loggedInUser, token);
   const [selectedImage, setSelectedImage] = useState("/image/cardimage.jpg");
-   const [formData, setFormData] = useState({
-        quantity: "1",
-    });
+  const [formData, setFormData] = useState({
+    quantity: "1",
+  });
 
   useEffect(() => {
     if (product?.images && product.images.length > 0) {
@@ -44,10 +44,10 @@ const ProductOverview = () => {
       };
 
       await create.mutateAsync(data);
-       toast.success("product added successfully!");
+      toast.success("product added successfully!");
       navigate("/cart");
     } catch (error) {
-      toast.error( error?.response?.data)
+      toast.error(error?.response?.data)
       console.log(error);
     }
   };
@@ -57,13 +57,13 @@ const ProductOverview = () => {
   if (isError) return <p className="text-center mt-10">Failed to load product</p>;
 
   return (
-   <div className="relative flex justify-center p-5 mt-15 w-full">
- 
-   
+    <div className="relative flex justify-center p-5 mt-15 w-full">
+
+
       <div className="flex flex-col lg:flex-row lg:gap-1 max-w-6xl w-full">
 
-       <Card className="lg:w-1/2 flex flex-col justify-center items-center p-0">
-  <div className="w-full h-64 sm:h-80 md:h-[60vh] lg:h-[70vh] overflow-y-auto">
+        <Card className="lg:w-1/2 flex flex-col justify-center items-center p-0">
+          <div className="w-full h-64 sm:h-80 md:h-[60vh] lg:h-[70vh] overflow-y-auto">
             <img
               src={selectedImage}
               alt={product.productName || "Product"}
@@ -105,7 +105,7 @@ const ProductOverview = () => {
           </p>
           <form onSubmit={handleSubmit} className="space-y-4 w-1/4">
             <div className="flex flex-col">
-              <Label  htmlFor="quantity"className="font-bold mb-3">Quantity:</Label>
+              <Label htmlFor="quantity" className="font-bold mb-3">Quantity:</Label>
               <Input
                 id="quantity"
                 name="quantity"
@@ -116,22 +116,22 @@ const ProductOverview = () => {
                 onChange={handleChange}
               />
             </div>
-             <Button
-          
-            className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-700 transition w-full sm:w-40 bg-gray-800 text-white"
-          >
-            Add to Cart
-          </Button>
+            <Button
+
+              className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-700 transition w-full sm:w-40 bg-gray-800 text-white"
+            >
+              Add to Cart
+            </Button>
           </form>
-         
-           <div>
-                        <h5 className="text-lg sm:text-xl font-bold mb-4">Return and Refund Policy</h5>
-                        <p>
-                           Returns accepted within 14 days in original condition. Refunds processed after inspection. For damaged or defective items, contact us for a full refund or replacement.
-                        </p>
-                    </div>
+
+          <div>
+            <h5 className="text-lg sm:text-xl font-bold mb-4">Return and Refund Policy</h5>
+            <p>
+              Returns accepted within 14 days in original condition. Refunds processed after inspection. For damaged or defective items, contact us for a full refund or replacement.
+            </p>
+          </div>
         </Card>
-        
+
       </div>
     </div>
   );

@@ -55,7 +55,7 @@ function NewArrival() {
               to={`/product/${product.id}`}
               className="group"
             >
-              <Card className="w-full hover:shadow-lg transition-all duration-300 cursor-pointer">
+             <Card className="w-full sm:w-64 cursor-pointer hover:shadow-lg transition-shadow duration-300 p-0 cursor-pointer">
                 <img
                   src={
                     product?.images?.length
@@ -77,7 +77,7 @@ function NewArrival() {
                   </CardHeader>
 
                   <div className="mt-2 flex items-center justify-between">
-                    <span className="font-bold text-sm">${product.price}</span>
+                    <span className="font-bold text-sm">Rs: {product.price}</span>
                     <Heart className="h-5 w-5 text-gray-700 hover:text-red-600 cursor-pointer" />
                   </div>
                 </CardContent>

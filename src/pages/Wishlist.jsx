@@ -31,7 +31,7 @@ const Wishlist = () => {
 
   return (
     <div className="my-10 px-4 mt-20">
-    
+
       <h2 className="text-2xl font-semibold mb-6 text-center">My Wishlist</h2>
 
       {safeWishlist.length === 0 ? (
@@ -41,7 +41,8 @@ const Wishlist = () => {
       ) : (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {safeWishlist.map((item) => (
-            <Card key={item.wishlistId} className="relative shadow-md hover:shadow-lg transition">
+            <Card key={item.wishlistId} className="relative shadow-md hover:shadow-lg transition w-full sm:w-64 cursor-pointer hover:shadow-lg transition-shadow duration-300 p-0 cursor-pointer">
+
               <Link to={`/product/${item.productId}`} className="block">
                 <img
                   src={

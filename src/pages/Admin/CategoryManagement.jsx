@@ -42,14 +42,14 @@ export default function CategoryManagement() {
   const handleSubmit = async (data) => {
     try {
       if (selectedCategory) {
-      
+
         await update.mutateAsync({
           categoryId: selectedCategory.id,
           categoryData: data,
         });
         toast.success("Category updated successfully!");
       } else {
-       
+
         await create.mutateAsync(data);
         toast.success("Category added successfully!");
       }
@@ -59,9 +59,9 @@ export default function CategoryManagement() {
     } catch (err) {
       toast.error(
         err?.response?.data?.message ||
-          (selectedCategory
-            ? "Failed to update category"
-            : "Failed to add category")
+        (selectedCategory
+          ? "Failed to update category"
+          : "Failed to add category")
       );
     }
   };
@@ -77,7 +77,7 @@ export default function CategoryManagement() {
         onAdd={handleAdd}
         onEdit={handleEdit}
         onDelete={handleDelete}
-       
+
       />
 
       <CategoryDialog
