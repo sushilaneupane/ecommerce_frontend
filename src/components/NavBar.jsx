@@ -15,11 +15,9 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
-  const { productCart } = useCart();
-  console.log(productCart);
+  const { cartItems } = useCart();
   const navigate = useNavigate();
 
-  // Close account dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!e.target.closest(".account-dropdown")) {
@@ -34,23 +32,20 @@ function Navbar() {
     logout();
     navigate("/login");
     setIsAccountOpen(false);
-    setIsOpen(false); // close mobile menu if open
+    setIsOpen(false);
   };
 
   const handleLinkClick = () => {
     setIsAccountOpen(false);
-    setIsOpen(false); // close mobile menu when link clicked
+    setIsOpen(false);
   };
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-white shadow-md px-4 py-3 z-50">
       <div className="container mx-auto flex items-center justify-between">
-        {/* Logo */}
         <div className="text-xl font-bold text-gray-800">
           <Link to="/" onClick={handleLinkClick}>Pahiran</Link>
         </div>
-
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6 flex-1 justify-end">
           <NavigationMenu>
             <NavigationMenuList className="flex space-x-8 items-center">
@@ -73,18 +68,17 @@ function Navbar() {
               {isAuthenticated && (
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
-                    <Link to="/cart" className="relative flex items-center gap-1">
-                      <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-blue-600" />
-
-                      {/* Cart count badge */}
-                      {productCart?.length > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                          {productCart.length}
+                    <Link to="/cart" className="relative flex items-center gap-2">
+                      <ShoppingCart className="h-8 w-8 text-gray-700 hover:text-blue-600 transition-colors duration-200" />
+                      {cartItems?.length > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold min-w-[18px] h-5 px-1 rounded-full flex items-center justify-center shadow-md">
+                          {cartItems.length}
                         </span>
                       )}
                     </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
+
               )}
               {isAuthenticated && (
                 <NavigationMenuItem>
@@ -95,9 +89,6 @@ function Navbar() {
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               )}
-
-
-              {/* Account Dropdown */}
               {isAuthenticated ? (
                 <div className="relative account-dropdown">
                   <Button
@@ -148,8 +139,6 @@ function Navbar() {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-
-        {/* Mobile Menu Button */}
         <div className="flex items-center gap-4 md:hidden">
           <button
             className="p-2"
@@ -180,8 +169,6 @@ function Navbar() {
             <Link to="/wishlist" className="flex items-center gap-2 text-gray-700" onClick={handleLinkClick}>
               <Heart className="h-6 w-6" />
             </Link>
-
-            {/* Mobile Account Dropdown */}
             {isAuthenticated ? (
               <div className="relative account-dropdown">
                 <button

@@ -60,4 +60,16 @@ export const deleteProduct = async (productId, token) => {
     console.error("Error deleting product:", error.response?.data || error.message);
     throw error;
   }
-}
+};
+export const getTotalLengthProducts = async () => {
+  try {
+    const response = await api.get(`/products/total`);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching total length of products:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};

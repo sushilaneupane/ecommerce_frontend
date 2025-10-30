@@ -20,9 +20,8 @@ export default function ProductManagement() {
   };
 
   const handleDelete = (productId) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
       remove.mutate(productId);
-    }
+    
   };
 
   const handleSubmit = (formData) => {
@@ -35,7 +34,8 @@ export default function ProductManagement() {
   };
 
   return (
-    <>
+      <div className="p-3 space-y-6">
+     <h4 className="text-2xl font-semibold mb-4">Product Management</h4>
       <ProductTable
         products={productsData || []}
         isLoading={isLoading}
@@ -51,6 +51,6 @@ export default function ProductManagement() {
         initialData={selectedProduct}
         onSubmit={handleSubmit}
       />
-    </>
+    </div>
   );
 }

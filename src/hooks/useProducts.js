@@ -5,6 +5,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  getTotalLengthProducts,
 } from "../api/productApi";
 import { PRODUCT_KEY } from "@/utils/queryKeys";
 import { toast } from "sonner";
@@ -13,25 +14,38 @@ export function useProducts() {
   const token = localStorage.getItem("authToken");
   const queryClient = useQueryClient();
 
-  // 🔹 Fetch all products
-  const { data: productsData = [], isLoading, isError } = useQuery({
+  const {
+    data: productsData = [],
+    isLoading: isProductsLoading,
+    isError: isProductsError,
+    refetch: refetchProducts,
+  } = useQuery({
     queryKey: [PRODUCT_KEY],
-    queryFn: fetchProducts, // API returns array directly
+    queryFn: fetchProducts,
   });
 
-  // 🔹 Create product
+  const {
+    data: totalProductsData = { totalProducts: 0 },
+    isLoading: isTotalLoading,
+    isError: isTotalError,
+    refetch: refetchTotalProducts,
+  } = useQuery({
+    queryKey: ["totalProducts"],
+    queryFn: getTotalLengthProducts,
+  });
+
   const create = useMutation({
-    mutationFn: (newProduct) => createProduct(newProduct, token),
+    mutationFn: (data) => createProduct(data, token),
     onSuccess: () => {
       toast.success("Product created successfully!");
       queryClient.invalidateQueries([PRODUCT_KEY]);
+      queryClient.invalidateQueries(["totalProducts"]);
     },
     onError: (err) => {
       toast.error(err?.response?.data?.message || "Failed to create product");
     },
   });
 
-  // 🔹 Update product
   const update = useMutation({
     mutationFn: ({ id, data }) => updateProduct(id, data, token),
     onSuccess: () => {
@@ -43,7 +57,6 @@ export function useProducts() {
     },
   });
 
-  // 🔹 Delete product
   const remove = useMutation({
     mutationFn: (id) => deleteProduct(id, token),
     onSuccess: () => {
@@ -55,7 +68,19 @@ export function useProducts() {
     },
   });
 
-  return { productsData, isLoading, isError, create, update, remove };
+  return {
+    productsData,
+    isLoading: isProductsLoading,
+    isError: isProductsError,
+    create,
+    update,
+    remove,
+    totalProducts: totalProductsData?.totalProducts ?? 0,
+    isTotalLoading,
+    isTotalError,
+    refetchTotalProducts,
+    refetchProducts,
+  };
 }
 
 export function useProductById(id) {

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useProducts } from "@/hooks/useProducts";
 import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import ProductCard from "@/components/ProductCard";
 function NewArrival() {
   const { productsData, isLoading, isError, error } = useProducts();
 
@@ -50,39 +50,7 @@ function NewArrival() {
       {latestProducts?.length ? (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {latestProducts.map((product) => (
-            <Link
-              key={product.id}
-              to={`/product/${product.id}`}
-              className="group"
-            >
-             <Card className="w-full sm:w-64 cursor-pointer hover:shadow-lg transition-shadow duration-300 p-0 cursor-pointer">
-                <img
-                  src={
-                    product?.images?.length
-                      ? `http://localhost:3001/uploads/${product.images[0].image}`
-                      : "/placeholder.jpg"
-                  }
-                  alt={product?.productName || "Product"}
-                  className="w-full h-36 sm:h-40 md:h-48 object-cover rounded-t-xl group-hover:opacity-90"
-                />
-
-                <CardContent className="p-3">
-                  <CardHeader className="p-0 mb-2">
-                    <CardTitle className="text-base group-hover:text-blue-600 transition-colors">
-                      {product.productName}
-                    </CardTitle>
-                    <CardDescription className="text-sm line-clamp-2">
-                      {product.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <div className="mt-2 flex items-center justify-between">
-                    <span className="font-bold text-sm">Rs: {product.price}</span>
-                    <Heart className="h-5 w-5 text-gray-700 hover:text-red-600 cursor-pointer" />
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+           <ProductCard key={product.id} product={product} />
           ))}
         </div>
       ) : (

@@ -11,16 +11,38 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Edit, Trash, Search } from "lucide-react";
+import { Edit, Trash2, Search } from "lucide-react";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Link } from "react-router-dom";
 
 export default function ProductTable({ products = [], onEdit, onDelete, onAdd }) {
   const [query, setQuery] = useState("");
+  const [selectedProductId, setSelectedProductId] = useState(null);
+
   const filtered = products.filter(
     (p) =>
       p.productName?.toLowerCase().includes(query.toLowerCase()) ||
       p.description?.toLowerCase().includes(query.toLowerCase()) ||
       p.categoryName?.toLowerCase().includes(query.toLowerCase())
   );
+
+  const handleDelete = () => {
+    if (selectedProductId) {
+      onDelete(selectedProductId);
+      setSelectedProductId(null);
+    }
+  };
 
   return (
     <Card className="w-full">
@@ -43,18 +65,19 @@ export default function ProductTable({ products = [], onEdit, onDelete, onAdd })
           <Button onClick={onAdd}>Add Product</Button>
         </div>
       </CardHeader>
+
       <CardContent>
         <div className="max-h-[550px] overflow-y-auto">
           <Table className="min-w-full table-auto">
-            <TableHeader>
+            <TableHeader className="sticky top-0 bg-background z-10">
               <TableRow>
-                <TableHead className="w-[50px]">S.N</TableHead>
-                <TableHead className="w-[60px]">Image</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="w-[100px]">Price</TableHead>
+                <TableHead className="w-[110px]">S.N</TableHead>
+                <TableHead className="w-[120px]">Image</TableHead>
+                <TableHead className="w-[130px]">Name</TableHead>
+                <TableHead className="w-[140px]">Category</TableHead>
+                <TableHead className="w-[150px]">Price</TableHead>
                 <TableHead className="max-w-[300px]">Description</TableHead>
-                <TableHead className="w-[120px] text-right">Actions</TableHead>
+                <TableHead className="w-[110px] text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
 
@@ -75,11 +98,13 @@ export default function ProductTable({ products = [], onEdit, onDelete, onAdd })
 
                     <TableCell>
                       <Avatar className="w-12 h-12">
-                        {product.images?.length > 0 ? (
-                          <AvatarImage
-                            src={`${import.meta.env.VITE_IMAGE_BASEURL}/${product.images[0].image}`}
-                            alt={product.productName}
-                          />
+                        {product.images?.[0] ? (
+                          <Link to={`/product/${product.id}`}>
+                            <AvatarImage
+                              src={`${import.meta.env.VITE_IMAGE_BASEURL}/${product.images[0].image}`}
+                              alt={product.productName}
+                            />
+                          </Link>
                         ) : (
                           <AvatarFallback>
                             {product.productName?.slice(0, 2).toUpperCase()}
@@ -94,6 +119,7 @@ export default function ProductTable({ products = [], onEdit, onDelete, onAdd })
                     <TableCell className="whitespace-pre-wrap max-w-[300px] text-sm text-muted-foreground">
                       {product.description || "—"}
                     </TableCell>
+
                     <TableCell className="text-right flex justify-end gap-2">
                       <Button
                         size="sm"
@@ -102,14 +128,42 @@ export default function ProductTable({ products = [], onEdit, onDelete, onAdd })
                       >
                         <Edit size={16} />
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => onDelete(product.id)}
-                      >
-                        <Trash size={16} />
-                      </Button>
+
+                     
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setSelectedProductId(product.id)}
+                          >
+                            <Trash2 className="w-4 h-4" color="red" />
+                          </Button>
+                        </AlertDialogTrigger>
+
+                      
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will permanently remove the product from your database.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={handleDelete}
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </TableCell>
+
                   </TableRow>
                 ))
               )}

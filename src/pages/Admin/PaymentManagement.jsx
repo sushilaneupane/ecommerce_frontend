@@ -1,76 +1,88 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePayments } from "@/hooks/usePayment";
 import PaymentTable from "@/components/PaymentTable";
 import PaymentDialog from "@/components/PaymentDialog";
 
-export default function OrderManagement() {
-  const [selectedOrder, setSelectedOrder] = useState(null);
+export default function PaymentManagement() {
+  const { paymentsData = [], isLoading, isError, error, update } = usePayments();
+  const [selectedPayment, setSelectedPayment] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const { paymentsData, isLoading, isError, update, refetch } = usePayments();
+  const filteredPayments = paymentsData.filter((payment) => {
+    const statusMatch = filterStatus ? payment.paymentStatus === filterStatus : true;
 
-  const filteredPayments = filterStatus
-    ? paymentsData.filter((payment) => payment.paymentStatus === filterStatus)
-    : paymentsData;
+    const searchMatch =
+      payment.transactionId?.toString()?.includes(searchQuery.toLowerCase()) ||
+      payment.firstName?.toLowerCase()?.includes(searchQuery.toLowerCase()) ||
+      payment.lastName?.toLowerCase()?.includes(searchQuery.toLowerCase());
 
-  const handleUpdate = (paymentId, newStatus) => {    
+    return statusMatch && searchMatch;
+  });
+
+  const handleUpdate = (paymentId, newStatus) => {
     update.mutate({ paymentId, paymentStatus: newStatus });
     setDialogOpen(false);
   };
 
   if (isLoading) return <div className="p-6">Loading payments...</div>;
-  if (isError) return <div className="p-6 text-red-500">Error loading payments: {error.message}</div>;
+  if (isError) return <div className="p-6 text-red-500">Error loading payments: {error?.message}</div>;
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-semibold">Payment Management</h1>
+    <div className="space-y-6">
+      <h4 className="text-2xl font-semibold mb-4">Payment Management</h4>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Filters</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Input placeholder="Search by Order ID or Customer Name" />
+      <Card className="">
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <CardTitle>Payments</CardTitle>
 
-          <Select onValueChange={setFilterStatus}>
-            <SelectTrigger>
-              <SelectValue placeholder="Filter by Status" />
-            </SelectTrigger>
-            <SelectContent>
+          <div className="flex w-full sm:w-auto gap-2">
+            <Input
+              placeholder="Search by Transaction ID or Customer Name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="sm:w-60"
+            />
+            <Select onValueChange={setFilterStatus}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder="Filter Status" />
+              </SelectTrigger>
+              <SelectContent>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
                 <SelectItem value="failed">Failed</SelectItem>
                 <SelectItem value="refunded">Refunded</SelectItem>
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Payments</CardTitle>
+              </SelectContent>
+            </Select>
+          </div>
         </CardHeader>
+
         <CardContent>
-          <PaymentTable
-            payments={filteredPayments}
-            onView={(payment) => {
-              setSelectedOrder(payment);
-              setDialogOpen(true);
-            }}
-          />
+          <div className="max-h-[550px] overflow-y-auto">
+            <PaymentTable
+              payments={filteredPayments}
+              onView={(payment) => {
+                setSelectedPayment(payment);
+                setDialogOpen(true);
+              }}
+            />
+          </div>
+
+          <div className="flex justify-between items-center mt-4 text-sm text-muted-foreground">
+            Showing {filteredPayments.length} of {paymentsData.length} payments
+          </div>
         </CardContent>
       </Card>
 
-      {selectedOrder && (
+      {selectedPayment && (
         <PaymentDialog
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}
-          payment={selectedOrder}
+          payment={selectedPayment}
           onUpdate={handleUpdate}
         />
       )}
