@@ -46,3 +46,14 @@ export const updateOrderApi = async (orderId, updateData, token) => {
     throw error;
   }
 };
+ export const getTotalOrders = async (token) => {
+  try {
+    const response = await api.get("/orders/total", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching total orders:", error.message);
+    throw error;
+  }
+};

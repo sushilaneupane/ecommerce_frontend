@@ -11,11 +11,14 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useProducts } from "../../hooks/useProducts";
+import { useOrders } from "../../hooks/useOrder";
 
 export default function Dashboard() {
-  const { products, isLoading } = useProducts();
-  const totalProducts = products?.length || 0;
-  const isTotalLoading = isLoading;
+  const { totalProductCount, isTotalLoading: isTotalProductsLoading } = useProducts();
+
+  const { totalOrderCount, isTotalLoading: isTotalOrdersLoading } = useOrders();
+
+  console.log("Total Orders in Dashboard:", totalProductCount);
 
   const salesData = [
     { month: "Jan", sales: 400 },
@@ -30,15 +33,13 @@ export default function Dashboard() {
     <div className="space-y-6 p-4">
       <h3 className="text-xl font-semibold">Admin Dashboard Overview</h3>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Products Card */}
         <Card className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white">
           <CardContent className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium">Total Products</p>
               <p className="text-2xl font-bold mt-1">
-               {isTotalLoading ? "Loading..." : totalProducts}
+                {isTotalProductsLoading ? "Loading..." : totalProductCount?.totalProducts || 0 }
               </p>
             </div>
             <div className="p-3 bg-white/20 rounded-full">
@@ -47,7 +48,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Monthly Sales Card */}
         <Card className="bg-gradient-to-r from-green-500 to-teal-500 text-white">
           <CardContent className="flex items-center justify-between">
             <div>
@@ -60,12 +60,13 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Orders Card */}
         <Card className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
           <CardContent className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium">Orders</p>
-              <p className="text-2xl font-bold mt-1">320</p>
+              <p className="text-2xl font-bold mt-1">
+                {isTotalOrdersLoading ? "Loading..." : totalOrderCount?.totalOrders || 0}
+              </p>
             </div>
             <div className="p-3 bg-white/20 rounded-full">
               <ShoppingCart size={24} />
@@ -73,7 +74,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Revenue Card */}
         <Card className="bg-gradient-to-r from-pink-500 to-rose-500 text-white">
           <CardContent className="flex items-center justify-between">
             <div>
@@ -87,7 +87,6 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Bar Chart */}
       <Card>
         <CardHeader>
           <CardTitle>Monthly Sales</CardTitle>

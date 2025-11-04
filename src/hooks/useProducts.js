@@ -9,6 +9,7 @@ import {
 } from "../api/productApi";
 import { PRODUCT_KEY } from "@/utils/queryKeys";
 import { toast } from "sonner";
+import is from "zod/v4/locales/is.cjs";
 
 export function useProducts() {
   const token = localStorage.getItem("authToken");
@@ -25,13 +26,14 @@ export function useProducts() {
   });
 
   const {
-    data: totalProductsData = { totalProducts: 0 },
+    data: totalProductCount = [],
     isLoading: isTotalLoading,
     isError: isTotalError,
-    refetch: refetchTotalProducts,
+    error: errorTotal,
   } = useQuery({
-    queryKey: ["totalProducts"],
-    queryFn: getTotalLengthProducts,
+    queryKey: [PRODUCT_KEY, "total-products"],
+    queryFn: () => getTotalLengthProducts(token),
+    enabled: !!token,
   });
 
   const create = useMutation({
@@ -68,6 +70,8 @@ export function useProducts() {
     },
   });
 
+  
+
   return {
     productsData,
     isLoading: isProductsLoading,
@@ -75,18 +79,24 @@ export function useProducts() {
     create,
     update,
     remove,
-    totalProducts: totalProductsData?.totalProducts ?? 0,
     isTotalLoading,
     isTotalError,
-    refetchTotalProducts,
     refetchProducts,
+    totalProductCount,
+    errorTotal,
+    isTotalLoading,
+    isTotalError,
   };
 }
 
 export function useProductById(id) {
+  const token = localStorage.getItem("authToken");
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const userId = user?.id ?? null;
+
   const { data: product, isLoading, isError } = useQuery({
     queryKey: [PRODUCT_KEY, id],
-    queryFn: () => fetchProductById(id),
+    queryFn: () => fetchProductById(id, userId),
     enabled: !!id,
     select: (data) => ({
       ...data,
@@ -98,3 +108,4 @@ export function useProductById(id) {
 
   return { product, isLoading, isError };
 }
+

@@ -14,15 +14,20 @@ export const fetchProducts = async () => {
   }
 };
 
-export const fetchProductById = async (id) => {
+export const fetchProductById = async (id, userId = null) => {
   try {
-    const response = await api.get(`/products/${id}`);
+    const url = userId ? `/products/${id}?userId=${userId}` : `/products/${id}`;
+    const response = await api.get(url);
     return response.data;
   } catch (error) {
-    console.error(`Error fetching product with id ${id}:`, error.response?.data || error.message);
+    console.error(
+      `Error fetching product with id ${id}:`,
+      error.response?.data || error.message
+    );
     throw error;
   }
 };
+
 
 export const createProduct = async (formData, token) => {
   return axios.post(`${import.meta.env.VITE_BASEURL}/products`, formData, {

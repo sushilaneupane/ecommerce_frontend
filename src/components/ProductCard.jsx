@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -9,77 +9,109 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { useAuth } from "@/context/AuthContext";
-import { useWishlist } from "@/hooks/useWishlist";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-
+import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/hooks/useCart";
+import { useWishlist } from "@/hooks/useWishlist";
 
 const ProductCard = ({ product }) => {
-  const { isAuthenticated } = useAuth();
+  console.log(product);
+  
+  const { isAuthenticated, loggedInUser, token } = useAuth();
   const navigate = useNavigate();
-  const { create } = useWishlist();
+  const { create: addToCartAPI } = useCart(loggedInUser, token);
+  const { create: addToWishlistAPI } = useWishlist();
 
-  const handleAddToFavourites = async () => {
+  const handleLocalStorageSave = (key, productData) => {
+    const existing = JSON.parse(localStorage.getItem(key)) || [];
+    const updated = [...existing, productData];
+    localStorage.setItem(key, JSON.stringify(updated));
+  };
+
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+
+    if (!isAuthenticated) {
+      handleLocalStorageSave("guest_cart", { productId: product.id, quantity: 1 });
+      toast.success("✅ Added to cart (Guest Mode)");
+      return;
+    }
+
     try {
-      if (!isAuthenticated) {
-        navigate("/login");
-        return;
-      }
-      await create.mutateAsync({ productId: product.id });
-      toast.success("✅ Added to favourites");
+      await addToCartAPI.mutateAsync({ productId: product.id, quantity: 1 });
+      toast.success("Product Successfully added to cart");
+      navigate("/cart");
+    } catch {
+      toast.error("This product is already in cart.");
+    }
+  };
+
+  const handleAddToFavourites = async (e) => {
+    e.preventDefault();
+
+    if (!isAuthenticated) {
+      handleLocalStorageSave("guest_wishlist", { productId: product.id });
+      toast.success(" Saved to wishlist (Guest Mode)");
+      return;
+    }
+
+    try {
+      await addToWishlistAPI.mutateAsync({ productId: product.id });
+      toast.success("Saved to wishlist");
       navigate("/wishlist");
-    } catch (error) {
-      toast.error("Failed to add to favourites");
+    } catch {
+      toast.error("This product is already in wishlist");
     }
   };
 
   return (
-
     <Link to={`/product/${product.id}`} className="w-full">
-      <Card className="w-full sm:w-64 cursor-pointer hover:shadow-lg transition-shadow duration-300 p-0 cursor-pointer">
+      <Card className="w-full sm:w-64 cursor-pointer hover:shadow-lg transition-shadow duration-300 p-0">
         <img
           src={
             product?.images?.length
               ? `http://localhost:3001/uploads/${product.images[0].image}`
               : "/placeholder.jpg"
           }
-          alt={product?.productName || "Product"}
-          className="w-full h-36 sm:h-40 md:h-48 object-cover rounded-t-xl bg-red-200"
+          alt={product.productName}
+          className="w-full h-36 sm:h-40 md:h-48 object-cover rounded-t-xl"
         />
 
-
-       
         <CardContent className="p-3">
           <CardHeader className="p-0 mb-2">
             <CardTitle className="text-base line-clamp-1">
-              {product?.productName}
+              {product.productName}
             </CardTitle>
             <CardDescription className="text-sm line-clamp-2">
-              {product?.description || "No description available"}
+              {product.description}
             </CardDescription>
           </CardHeader>
 
-         
           <div className="mt-2 flex items-center justify-between">
-            <span className="font-bold text-sm">
-              {product?.price ? `Rs ${product.price}` : "N/A"}
-            </span>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                handleAddToFavourites();
-              }}
-              variant="ghost"
-              className="flex items-center"
-            >
-              <Heart className="h-6 w-6 text-gray-700 hover:text-red-600" />
-            </Button>
+            <span className="font-bold text-sm">Rs {product.price}</span>
+
+            <div className="flex gap-1">
+              <Button
+                onClick={handleAddToFavourites}
+                variant="ghost"
+                size="sm"
+              >
+                <Heart className="h-5 w-5 hover:text-red-600" />
+              </Button>
+
+              <Button
+                onClick={handleAddToCart}
+                variant="default"
+                size="sm"
+                className="bg-gray-800 text-white hover:bg-gray-900"
+              >
+                Add to Cart
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
     </Link>
-
   );
 };
 

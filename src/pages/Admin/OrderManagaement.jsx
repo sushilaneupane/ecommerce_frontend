@@ -13,7 +13,6 @@ export default function OrderManagement() {
   const [filterStatus, setFilterStatus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Filter by status
   const filteredOrders = allOrders.filter((order) => {
     const statusMatch = filterStatus ? order.orderStatus === filterStatus : true;
     const searchMatch =
@@ -24,7 +23,7 @@ export default function OrderManagement() {
   });
 
   const handleUpdate = (orderId, newStatus) => {
-    update({ orderId, orderStatus: newStatus });
+    update.mutate({ orderId, orderStatus: newStatus });
     setDialogOpen(false);
   };
 
@@ -32,7 +31,7 @@ export default function OrderManagement() {
   if (isErrorAll) return <div className="p-6 text-red-500">Error loading orders: {errorAll?.message}</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
      <h4 className="text-2xl font-semibold mb-4">Order Management</h4>
 
       <Card className="w-full">

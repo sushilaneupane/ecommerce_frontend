@@ -38,7 +38,6 @@ function AllProducts() {
   
 
   const products = productsData || [];
-
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
@@ -78,10 +77,10 @@ function AllProducts() {
   }, [products, selectedCategory, searchQuery, sortOption]);
 
   return (
-    <div className="container mx-auto px-4 py-8 mt-9">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-      
-        <aside className="col-span-1 bg-gray-50 p-4 rounded-lg shadow flex flex-col">
+  <div className="container mx-auto px-4 py-8 mt-9">
+     <div className="flex flex-col md:flex-row gap-6">
+   <aside className="w-full md:w-1/4 bg-gray-50 p-4 rounded-lg shadow h-fit flex-shrink-0">
+
           <div className="flex justify-end mb-4">
             <Button
               onClick={() => setShowCategories(!showCategories)}
@@ -145,7 +144,7 @@ function AllProducts() {
         </aside>
 
       
-        <main className={showCategories ? "md:col-span-3" : "md:col-span-4"}>
+      <main className={`w-full ${showCategories ? "md:w-3/4" : "md:w-full"}`}>
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
             <h3 className="text-2xl font-semibold">
               {selectedCategory === "All" ? "All Products" : selectedCategory}

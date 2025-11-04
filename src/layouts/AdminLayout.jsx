@@ -7,7 +7,7 @@ export default function AdminLayout() {
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
       <main className="flex-1 p-6 overflow-y-auto">
-        <Outlet /> {/* 👈 Nested routes render here */}
+        <Outlet />
       </main>
     </div>
   );

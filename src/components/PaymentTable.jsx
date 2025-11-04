@@ -13,6 +13,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Search } from "lucide-react";
 
 export default function PaymentTable({ payments = [], onView }) {
+  console.log(payments, "payments in table");
   const [query, setQuery] = useState("");
 
   const filtered = payments.filter(
@@ -24,7 +25,7 @@ export default function PaymentTable({ payments = [], onView }) {
   );
 
   return (
-    <Card className="w-full">
+    <Card className="w-full ">
          {/* HEADER */}
          <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-0 gap-4">
            <CardTitle>Payments List</CardTitle>

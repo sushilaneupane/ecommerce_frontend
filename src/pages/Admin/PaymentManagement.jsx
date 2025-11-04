@@ -33,10 +33,10 @@ export default function PaymentManagement() {
   if (isError) return <div className="p-6 text-red-500">Error loading payments: {error?.message}</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
       <h4 className="text-2xl font-semibold mb-4">Payment Management</h4>
 
-      <Card className="">
+      <Card className="p-">
         <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <CardTitle>Payments</CardTitle>
 
