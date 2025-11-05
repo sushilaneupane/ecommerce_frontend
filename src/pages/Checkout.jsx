@@ -181,7 +181,7 @@ const handleCreateOrder = (transactionId, method, paymentStatus = "pending") => 
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <Button type="submit" disabled={isCreating || isUpdating} className="flex-1">
+                    <Button type="submit" disabled={isCreating || isUpdating} className="flex-1 w-half">
                       {isCreating || isUpdating ? "Saving..." : address ? "Update Address" : "Save Address"}
                     </Button>
                     {address && (

@@ -61,7 +61,7 @@ export default function OrderManagement() {
         </CardHeader>
 
         <CardContent>
-          <div className="max-h-[550px] overflow-y-auto">
+          <div className="max-h-[600px]">
             <OrderTable
               orders={filteredOrders}
               onView={(order) => {

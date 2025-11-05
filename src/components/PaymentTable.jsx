@@ -8,12 +8,9 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Search } from "lucide-react";
 
 export default function PaymentTable({ payments = [], onView }) {
-  console.log(payments, "payments in table");
   const [query, setQuery] = useState("");
 
   const filtered = payments.filter(
@@ -25,24 +22,21 @@ export default function PaymentTable({ payments = [], onView }) {
   );
 
   return (
-    <Card className="w-full ">
-         {/* HEADER */}
-         <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-0 gap-4">
-           <CardTitle>Payments List</CardTitle>
-  
-         </CardHeader>
-      {/* TABLE */}
-      <CardContent>
-        <div className="max-h-[550px] overflow-y-auto">
-          <Table className="min-w-full table-auto">
-            <TableHeader>
+    <Card className="w-full">
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-4">
+        <CardTitle>Payments List</CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="max-h-[450px] overflow-y-auto p-4 m-4">
+          <Table className="min-w-full table-fixed">
+            <TableHeader className="sticky top-0 z-20 bg-gray-200">
               <TableRow>
-                <TableHead className="w-[80px]">Transaction ID</TableHead>
-                <TableHead className="w-[100px]">User Name</TableHead>
-                <TableHead className="w-[120px]">Date</TableHead>
-                <TableHead className="w-[140px]">Amount</TableHead>
-                <TableHead className="w-[160px]">Status</TableHead>
-                <TableHead className="w-[100px] text-right">Action</TableHead>
+                <TableHead className="w-1/6">Transaction ID</TableHead>
+                <TableHead className="w-1/6">User Name</TableHead>
+                <TableHead className="w-1/6">Date</TableHead>
+                <TableHead className="w-1/6">Amount</TableHead>
+                <TableHead className="w-1/6">Status</TableHead>
+                <TableHead className="w-1/6 text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
 
@@ -56,13 +50,25 @@ export default function PaymentTable({ payments = [], onView }) {
               ) : (
                 filtered.map((payment) => (
                   <TableRow key={payment.paymentId || payment.id}>
-                    <TableCell>{payment.transactionId}</TableCell>
-                    <TableCell>{payment.firstName} {payment.lastName}</TableCell>
-                    <TableCell>{new Date(payment.createdAt).toLocaleDateString()}</TableCell>
-                    <TableCell>Rs. {Number(payment.amount || payment.totalAmount).toFixed(2)}</TableCell>
-                    <TableCell className="capitalize">{payment.paymentStatus || "—"}</TableCell>
+                    <TableCell className="truncate">{payment.transactionId}</TableCell>
+                    <TableCell className="truncate">
+                      {payment.firstName} {payment.lastName}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(payment.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      Rs. {Number(payment.amount || payment.totalAmount).toFixed(2)}
+                    </TableCell>
+                    <TableCell className="capitalize">
+                      {payment.paymentStatus || "—"}
+                    </TableCell>
                     <TableCell className="text-right">
-                      <Button size="sm" variant="outline" onClick={() => onView(payment)}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onView(payment)}
+                      >
                         View
                       </Button>
                     </TableCell>

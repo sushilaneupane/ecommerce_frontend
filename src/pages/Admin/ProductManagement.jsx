@@ -35,7 +35,7 @@ export default function ProductManagement() {
 
   return (
       <div className="p-3 space-y-6">
-     <h4 className="text-2xl font-semibold mb-4">Product Management</h4>
+      <h4 className="text-2xl font-semibold mb-4">Product Management</h4>
       <ProductTable
         products={productsData || []}
         isLoading={isLoading}

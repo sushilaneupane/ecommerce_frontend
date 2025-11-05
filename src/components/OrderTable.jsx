@@ -33,16 +33,16 @@ export default function OrderTable({ orders = [], onView }) {
 
       {/* TABLE */}
       <CardContent>
-        <div className="max-h-[550px] overflow-y-auto">
-          <Table className="min-w-full table-auto">
-            <TableHeader>
+        <div className="max-h-[450px] overflow-y-auto p-4">
+          <Table className="min-w-full table-fixed">
+            <TableHeader className="sticky top-0 z-20 bg-gray-200">
               <TableRow>
-                <TableHead className="w-[80px]">Order ID</TableHead>
-                <TableHead className="w-[100px]">User Name</TableHead>
-                <TableHead className="w-[140px]">Date</TableHead>
-                <TableHead className="w-[120px]">Amount</TableHead>
-                <TableHead className="w-[120px]">Status</TableHead>
-                <TableHead className="w-[100px] text-right">Action</TableHead>
+                <TableHead className="w-1/6">Transaction ID</TableHead>
+                <TableHead className="w-1/6">User Name</TableHead>
+                <TableHead className="w-1/6">Date</TableHead>
+                <TableHead className="w-1/6">Amount</TableHead>
+                <TableHead className="w-1/6">Status</TableHead>
+                <TableHead className="w-1/6 text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
 
