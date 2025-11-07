@@ -5,9 +5,8 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // ✅ new loading state
+  const [loading, setLoading] = useState(true); 
 
-  // Restore token and user from localStorage on mount
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     const userData = localStorage.getItem("user");
@@ -15,7 +14,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       setUser(JSON.parse(userData));
     }
-    setLoading(false); // ✅ done restoring
+    setLoading(false);
   }, []);
 
   const login = (token, userData) => {

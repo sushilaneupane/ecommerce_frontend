@@ -50,9 +50,7 @@ const ProductOverview = () => {
 
   return (
     <div className="flex flex-col justify-center items-center p-5 mt-15 w-full">
-      {/* Main Product Card Layout */}
       <div className="flex flex-col lg:flex-row lg:gap-1 max-w-6xl w-full">
-        {/* Left: Image gallery */}
         <Card className="lg:w-1/2 flex flex-col justify-center items-center p-0">
           <div className="w-full h-64 sm:h-80 md:h-[60vh] lg:h-[70vh] overflow-y-auto">
             <img
@@ -77,7 +75,6 @@ const ProductOverview = () => {
           </div>
         </Card>
 
-        {/* Right: Product details */}
         <Card className="lg:w-1/2 bg-gray-50 p-4 sm:p-6 flex flex-col justify-start">
           <CardHeader className="p-0">
             <CardTitle className="text-xl sm:text-2xl font-bold">
@@ -122,7 +119,6 @@ const ProductOverview = () => {
         </Card>
       </div>
 
-      {/* Recommended Products */}
       {product.recommendedProducts?.length > 0 && (
         <section className="container mx-auto px-4 py-10">
           <h2 className="text-2xl font-bold mb-6">Recommended Products</h2>

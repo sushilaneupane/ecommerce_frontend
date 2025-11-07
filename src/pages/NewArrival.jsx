@@ -27,16 +27,11 @@ function NewArrival() {
   }
 
   console.log(productsData, "produts data");
-  
-
   const latestProducts = productsData?.slice(-8).reverse();
-
   return (
     <section className="container mx-auto px-4 py-10">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">🆕 Newly Arrived</h2>
-
-        {/* ✅ Navigate to All Products */}
         <Link to="/products">
           <Button
             variant="outline"
