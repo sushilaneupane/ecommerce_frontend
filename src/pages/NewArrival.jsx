@@ -35,7 +35,7 @@ function NewArrival() {
         <Link to="/products">
           <Button
             variant="outline"
-            className="hover:bg-blue-600 hover:text-white transition-colors"
+            className="transition-colors"
           >
             View All
           </Button>

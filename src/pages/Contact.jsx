@@ -51,7 +51,7 @@ function Contact() {
       <h2 className="text-3xl font-bold mb-10 text-center">Contact Us</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        {/* Left Column - Image */}
+        
         <div className="w-full h-full">
           <img
             src={contactus}
@@ -60,11 +60,11 @@ function Contact() {
           />
         </div>
 
-        {/* Right Column - Form */}
+   
         <div className="bg-white shadow-md rounded-xl p-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* Name */}
+            
               <FormField
                 control={form.control}
                 name="name"
@@ -79,7 +79,6 @@ function Contact() {
                 )}
               />
 
-              {/* Email */}
               <FormField
                 control={form.control}
                 name="email"
@@ -94,7 +93,7 @@ function Contact() {
                 )}
               />
 
-              {/* Message */}
+           
               <FormField
                 control={form.control}
                 name="message"

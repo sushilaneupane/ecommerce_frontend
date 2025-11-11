@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useUser } from "@/hooks/useUser.js";
+import { Eye, EyeOff } from "lucide-react";
 
 const formSchema = z.object({
   firstName: z.string().nonempty("First name is required").min(2),
@@ -28,6 +29,8 @@ export default function RegisterForm() {
   const navigate = useNavigate();
   const { create: createUser } = useUser();
   const { mutate: registerUser, isLoading: isPending } = createUser;
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -53,21 +56,43 @@ export default function RegisterForm() {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Loop through fields */}
             {["firstName", "lastName", "email", "password", "phone"].map((field) => (
               <FormField
                 key={field}
                 control={form.control}
                 name={field}
                 render={({ field: f }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium capitalize">{field.replace(/([A-Z])/g, ' $1')}</FormLabel>
+                  <FormItem className="relative">
+                    <FormLabel className="text-sm font-medium capitalize">
+                      {field.replace(/([A-Z])/g, " $1")}
+                    </FormLabel>
+
                     <FormControl>
-                      <Input
-                        {...f}
-                        type={field === "password" ? "password" : field === "email" ? "email" : "text"}
-                        placeholder={field.charAt(0).toUpperCase() + field.slice(1) + " *"}
-                      />
+                      <div className="relative">
+                        <Input
+                          {...f}
+                          type={
+                            field === "password"
+                              ? (showPassword ? "text" : "password")
+                              : field === "email"
+                              ? "email"
+                              : "text"
+                          }
+                          placeholder={field.charAt(0).toUpperCase() + field.slice(1) + " *"}
+                        />
+
+                        {field === "password" && (
+                          <span
+                            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                          </span>
+                        )}
+                      </div>
                     </FormControl>
+
                     <FormMessage />
                   </FormItem>
                 )}

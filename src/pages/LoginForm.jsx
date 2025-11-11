@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,8 +17,8 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useUser } from "@/hooks/useUser.js";
+import { Eye, EyeOff } from "lucide-react";
 
-// ✅ Validation schema
 const loginSchema = z.object({
   email: z
     .string()
@@ -32,8 +32,8 @@ const loginSchema = z.object({
 
 export default function LoginForm() {
   const navigate = useNavigate();
-  const { login: loginContext } = useAuth(); // auth context login
-  const { login } = useUser(); // useUser hook for API call
+  const { login: loginContext } = useAuth(); 
+  const { login } = useUser(); 
   const { mutate: loginUser, isLoading: isPending } = login;
 
   const {
@@ -43,6 +43,8 @@ export default function LoginForm() {
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (data) => {
     loginUser(data, {
@@ -76,7 +78,7 @@ export default function LoginForm() {
 
   return (
     <section className="flex items-center justify-center h-screen bg-gray-50 px-4">
-      <Card className="w-full max-w-md bg-white shadow-xl rounded-2xl bg-gray-100">
+      <Card className="w-full max-w-md shadow-xl rounded-2xl bg-gray-100 relative">
         <CardHeader className="text-center">
           <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold mt-5">
             Login
@@ -87,8 +89,8 @@ export default function LoginForm() {
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-            {/* Email Field */}
+          <form className="space-y-4 relative" onSubmit={handleSubmit(onSubmit)}>
+
             <div className="space-y-1">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -102,19 +104,22 @@ export default function LoginForm() {
               )}
             </div>
 
-            {/* Password Field */}
-            <div className="space-y-1">
+            <div className="space-y-1 relative">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 {...register("password")}
               />
+              <span
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </span>
               {errors.password && (
-                <p className="text-red-500 text-sm">
-                  {errors.password.message}
-                </p>
+                <p className="text-red-500 text-sm">{errors.password.message}</p>
               )}
               <div className="text-right">
                 <Link
@@ -126,7 +131,6 @@ export default function LoginForm() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? "Logging in..." : "Login"}
             </Button>

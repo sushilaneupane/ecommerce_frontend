@@ -69,7 +69,7 @@ export default function ProductTable({ products = [], onEdit, onDelete, onAdd })
       <CardContent>
         <div className="max-h-[550px] overflow-y-auto">
           <Table className="min-w-full table-auto">
-            <TableHeader className="sticky top-0 bg-background z-10">
+            <TableHeader className="sticky top-0 bg-background z-10 bg-gray-200">
               <TableRow>
                 <TableHead className="w-[110px]">S.N</TableHead>
                 <TableHead className="w-[120px]">Image</TableHead>

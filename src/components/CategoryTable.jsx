@@ -57,7 +57,7 @@ export default function CategoryTable({ categories = [], onAdd, onEdit, onDelete
       <CardContent>
         <div className="max-h-[550px] overflow-y-auto">
           <Table className="min-w-full table-auto">
-            <TableHeader>
+            <TableHeader className="sticky top-0 bg-background z-10 bg-gray-200">
               <TableRow>
                 <TableHead className="w-[50px]">S.N</TableHead>
                 <TableHead className="w-[0px]">Name</TableHead>

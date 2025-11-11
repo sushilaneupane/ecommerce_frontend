@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Tags, ShoppingBag, LogOut } from "lucide-react";
+import { LayoutDashboard, Tags, ShoppingBag, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Sidebar() {
@@ -29,9 +29,8 @@ export default function Sidebar() {
             <Link
               key={path}
               to={path}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-100 transition ${
-                location.pathname === path ? "bg-blue-200" : ""
-              }`}
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-100 transition ${location.pathname === path ? "bg-blue-200" : ""
+                }`}
             >
               <Icon className="w-5 h-5" />
               <span>{label}</span>
@@ -40,11 +39,15 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <div className="mt-10">
-        <Button variant="destructive" className="w-full flex items-center gap-2" onClick={handleLogout}>
-          <LogOut className="w-4 h-4" /> Logout
-        </Button>
-      </div>
+
+      <Button
+        variant="outline"
+        className="w-fit px-2 py-2 flex justify-end items-center"
+        onClick={handleLogout}
+      >
+        <User className="w-4 h-4 ml-2" />
+      </Button>
+
     </aside>
   );
 }

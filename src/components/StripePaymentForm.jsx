@@ -1,4 +1,4 @@
-// src/components/StripePaymentForm.jsx
+
 import React, { useState } from "react";
 import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";

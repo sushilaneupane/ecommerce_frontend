@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import StripePaymentForm from "@/components/StripePaymentForm";
+import { Banknote, CreditCard } from "lucide-react";
 
 const stripePromise = loadStripe("pk_test_51SPpgz9dnkZdN5mXo3xGQPx32S0NORnO3pROSjoD2B0wGQzGGk67PSLwqogFcMT1eHdSdcmvnHsOIjuI1T8O32GD00SBGbNfFr");
 
@@ -80,35 +81,35 @@ const CheckoutPage = () => {
   const deliveryFee = 50;
   const grandTotal = itemsTotal + deliveryFee;
 
-const handleCreateOrder = (transactionId, method, paymentStatus = "pending") => {
-  if (!address) return toast.error("Please add your address before placing the order.");
-  if (cartItems.length === 0) return toast.error("Your cart is empty.");
+  const handleCreateOrder = (transactionId, method, paymentStatus = "pending") => {
+    if (!address) return toast.error("Please add your address before placing the order.");
+    if (cartItems.length === 0) return toast.error("Your cart is empty.");
 
-  createOrder.mutate(
-    {
-      userId: loggedInUser?.id,
-      shippingCost: deliveryFee,
-      totalAmount: itemsTotal,
-      addressId: address?.id,
-      products: cartItems.map((item) => ({
-        productId: item.productId || item.id,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-      transactionId,
-      paymentMethod: method,
-      paymentStatus,
-    },
-    {
-      onSuccess: () => {
-        navigate("/");
+    createOrder.mutate(
+      {
+        userId: loggedInUser?.id,
+        shippingCost: deliveryFee,
+        totalAmount: itemsTotal,
+        addressId: address?.id,
+        products: cartItems.map((item) => ({
+          productId: item.productId || item.id,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        transactionId,
+        paymentMethod: method,
+        paymentStatus,
       },
-      onError: (error) => {
-        toast.error(error?.response?.data?.message || "Failed to place order. Try again.");
-      },
-    }
-  );
-};
+      {
+        onSuccess: () => {
+          navigate("/");
+        },
+        onError: (error) => {
+          toast.error(error?.response?.data?.message || "Failed to place order. Try again.");
+        },
+      }
+    );
+  };
 
 
   if (isLoading) return <p className="text-center py-6">Loading address...</p>;
@@ -232,11 +233,17 @@ const handleCreateOrder = (transactionId, method, paymentStatus = "pending") => 
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
                       <input type="radio" id="cod" name="paymentMethod" value="cod" checked={paymentMethod === "cod"} onChange={() => setPaymentMethod("cod")} />
-                      <Label htmlFor="cod">Cash on Delivery (COD)</Label>
+                      <Label htmlFor="cod" className="flex items-center gap-2 cursor-pointer">
+                        <Banknote className="w-5 h-5" />
+                       (COD)
+                      </Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <input type="radio" id="card" name="paymentMethod" value="stripe" checked={paymentMethod === "stripe"} onChange={() => setPaymentMethod("stripe")} />
-                      <Label htmlFor="card">Pay with Card (Stripe)</Label>
+                      <Label htmlFor="stripe" className="flex items-center gap-2 cursor-pointer">
+                        <CreditCard className="w-5 h-5" />
+                         (Stripe)
+                      </Label>
                     </div>
                   </div>
 
